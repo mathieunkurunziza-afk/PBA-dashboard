@@ -1,0 +1,64 @@
+name: Update dashboard data
+
+# Copies the latest data from the Google Sheet into data/active_schools.csv
+# Runs every hour, and you can also run it by hand from the "Actions" tab.
+on:
+  schedule:
+    - cron: "7 * * * *"      # every hour, at minute 7 (times are UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the sheet as CSV
+        env:
+          SHEET_CSV_URL: ${{ secrets.SHEET_CSV_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SHEET_CSV_URL}" ]; then
+            echo "::error::The SHEET_CSV_URL secret is missing. Add it under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          mkdir -p data
+          curl -sSfL --retry 3 "${SHEET_CSV_URL}" -o data/new.csv
+
+          # Safety checks: never replace good data with a broken file
+          if head -c 200 data/new.csv | grep -qi "<html"; then
+            echo "::error::Google returned a web page, not a CSV. Check that the tab is published to the web as CSV."
+            exit 1
+          fi
+          if ! head -1 data/new.csv | grep -qi "School_Name"; then
+            echo "::error::The first row has no 'School_Name' column. The wrong tab may be published."
+            exit 1
+          fi
+          rows=$(wc -l < data/new.csv)
+          if [ "$rows" -lt 50 ]; then
+            echo "::error::Only $rows rows downloaded - that looks wrong, keeping the old data."
+            exit 1
+          fi
+          mv data/new.csv data/active_schools.csv
+          echo "Downloaded $rows rows."
+
+      - name: Save if the data changed
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain data/active_schools.csv)" ]; then
+            echo "No change in the data."
+            exit 0
+          fi
+          echo "{\"updated\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > data/meta.json
+          git config user.name "dashboard-bot"
+          git config user.email "dashboard-bot@users.noreply.github.com"
+          git add data/active_schools.csv data/meta.json
+          git commit -m "Update dashboard data"
+          git push
