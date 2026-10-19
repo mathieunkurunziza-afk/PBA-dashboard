@@ -16,10 +16,10 @@ const SETTINGS = {
   // "claude" -> read the dashboard's own database inside Claude
   MODE: "csv",
 
-  // CSV mode: where the data comes from.
-  //  1) "data/active_schools.csv"  -> the copy kept in GitHub (updated by the GitHub Action)
-  //  2) the "Publish to web" CSV link of the Google Sheet -> reads the sheet directly
-  DATA_URL: "data/active_schools.csv",
+  // CSV mode (GitHub). LIVE: paste the Google Sheet "Publish to web" CSV link between the quotes.
+  // The dashboard reads it every time it opens. If it can't, it uses the BACKUP copy kept in GitHub.
+  LIVE_CSV_URL: "",
+  BACKUP_URL: "data/active_schools.csv",
 
   // Claude mode: the Google Sheet the owner loads data from
   SHEET_ID: "17X6-nkTtPTP4xxoxCXnYhMW0YxbA8pXnXECMzw-Cag0",
@@ -39,7 +39,7 @@ const SETTINGS = {
 
   LIST_LIMIT: 10,        // district / sector lists show this many rows first, then "Show all"
   SCHOOL_LIST_LIMIT: 11, // school lists show this many rows first
-  AUTO_REFRESH_MINUTES: 30 // CSV mode: reload data while the page is open (0 = never)
+  AUTO_REFRESH_MINUTES: 10 // CSV mode: reload data while the page is open (0 = never)
 };
 </script>
 <style>
@@ -666,22 +666,29 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
   // ============================================================
   // DATA: CSV mode (GitHub)
   // ============================================================
+  async function fetchCSV(url) {
+    const res = await fetch(url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
+    if (!res.ok) throw new Error("error " + res.status);
+    const text = await res.text();
+    if (/^\s*</.test(text)) throw new Error("the link returned a web page, not a CSV file");
+    const records = rowsToRecords(parseCSV(text));
+    if (!records.length) throw new Error("no schools found");
+    return records;
+  }
+  const clock = () => new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
   async function loadCSV(first) {
+    if (S.LIVE_CSV_URL) {
+      try { const records = await fetchCSV(S.LIVE_CSV_URL); setData(records, null, "Live data · checked " + clock()); return; }
+      catch (err) { console.warn("Live sheet not reachable, using the backup copy:", err); }
+    }
     try {
-      const url = S.DATA_URL + (S.DATA_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error("Could not load the data (error " + res.status + ").");
-      const text = await res.text();
-      if (/^\s*</.test(text)) throw new Error("The data link returned a web page instead of a CSV file. Check DATA_URL.");
-      const records = rowsToRecords(parseCSV(text));
-      if (!records.length) throw new Error("No schools were found in the data.");
+      const records = await fetchCSV(S.BACKUP_URL);
       let when = null;
-      if (S.DATA_URL.startsWith("data/")) {
-        try { const m = await fetch("data/meta.json?t=" + Date.now(), { cache: "no-store" }); if (m.ok) when = (await m.json()).updated || null; } catch (e) { /* optional */ }
-      }
-      setData(records, when || Date.now(), when ? "Data updated:" : "Data loaded:");
+      try { const m = await fetch("data/meta.json?t=" + Date.now(), { cache: "no-store" }); if (m.ok) when = (await m.json()).updated || null; } catch (e) { /* optional */ }
+      const stamp = when ? new Date(when).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "";
+      setData(records, null, S.LIVE_CSV_URL ? `Backup copy${stamp ? " from " + stamp : ""} · live sheet not reachable` : `Data updated${stamp ? ": " + stamp : ""}`);
     } catch (err) {
-      if (first) showMessage(`<b>The dashboard could not load.</b><br>${esc(err.message)}`);
+      if (first) showMessage(`<b>The dashboard could not load the data.</b><br>Check the internet connection and reload the page. (${esc(err.message)})`);
       console.error(err);
     }
   }
