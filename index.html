@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PBA School Dashboard</title>
+<meta name="description" content="Project assignment and school competition status for education officials.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+/* ============================================================
+   SETTINGS — the only part you normally need to change
+   ============================================================ */
+const SETTINGS = {
+  // "csv"    -> read a CSV file (GitHub version)
+  // "claude" -> read the dashboard's own database inside Claude
+  MODE: "csv",
+
+  // CSV mode: where the data comes from.
+  //  1) "data/active_schools.csv"  -> the copy kept in GitHub (updated by the GitHub Action)
+  //  2) the "Publish to web" CSV link of the Google Sheet -> reads the sheet directly
+  DATA_URL: "data/active_schools.csv",
+
+  // Claude mode: the Google Sheet the owner loads data from
+  SHEET_ID: "17X6-nkTtPTP4xxoxCXnYhMW0YxbA8pXnXECMzw-Cag0",
+  SHEET_RANGE: "'Active schools'!A1:U3000",
+
+  TITLE: "PBA School Dashboard",
+  SUBTITLE: "Academic Year 2026–2027",
+
+  // School colour rule for project assignment
+  GREEN_ABOVE: 80,   // more than 80% of teachers assigned  -> Green
+  RED_BELOW: 50,     // less than 50% of teachers assigned  -> Red  (otherwise Yellow)
+  COUNT_SOME_AS_ASSIGNED: true, // teachers who assigned in SOME classes count as assigned
+
+  // Competition target per school
+  TARGET_STUDENTS: 40, // at least 40 students
+  TARGET_EACH: 20,     // 20 in S5 and 20 in S6
+
+  LIST_LIMIT: 10,        // district / sector lists show this many rows first, then "Show all"
+  SCHOOL_LIST_LIMIT: 11, // school lists show this many rows first
+  AUTO_REFRESH_MINUTES: 30 // CSV mode: reload data while the page is open (0 = never)
+};
+</script>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f3f4f1;
+  --surface: #ffffff;
+  --surface-2: #f6f7f4;
+  --line: #e2e3dd;
+  --ink: #101211;
+  --ink-2: #4f524c;
+  --ink-3: #7b7e76;
+  --brand: #1c5cab;
+  --brand-soft: #e7eff9;
+  --bar: #2a78d6;
+  --good: #0ca30c;
+  --good-ink: #006300;
+  --good-soft: #e6f5e6;
+  --warn: #fab219;
+  --warn-ink: #855600;
+  --warn-soft: #fff4dc;
+  --bad: #d03b3b;
+  --bad-ink: #a52a2a;
+  --bad-soft: #fbe9e9;
+  --none: #c9cac3;
+  --shadow: 0 1px 2px rgba(16,18,17,.05), 0 2px 8px rgba(16,18,17,.04);
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0e0f0e; --surface: #1a1b1a; --surface-2: #232422; --line: #353733;
+    --ink: #f0f0ec; --ink-2: #c3c4bb; --ink-3: #8f9189;
+    --brand: #86b6ef; --brand-soft: #1d2a3b; --bar: #3987e5;
+    --good-ink: #63d063; --good-soft: #15291a; --warn-ink: #fab219; --warn-soft: #2f2610;
+    --bad-ink: #f08a8a; --bad-soft: #321818; --none: #4b4d47; --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0e0f0e; --surface: #1a1b1a; --surface-2: #232422; --line: #353733;
+  --ink: #f0f0ec; --ink-2: #c3c4bb; --ink-3: #8f9189;
+  --brand: #86b6ef; --brand-soft: #1d2a3b; --bar: #3987e5;
+  --good-ink: #63d063; --good-soft: #15291a; --warn-ink: #fab219; --warn-soft: #2f2610;
+  --bad-ink: #f08a8a; --bad-soft: #321818; --none: #4b4d47; --shadow: none;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.45 "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; }
+main.wrap { padding-block: 0 48px; }
+button, select { font: inherit; }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+
+/* header */
+header.top { background: var(--surface); border-bottom: 1px solid var(--line); }
+header.top .wrap { padding-block: 16px 0; }
+.title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+h1 { font-size: 22px; line-height: 1.2; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.sub { color: var(--ink-2); font-size: 14px; margin-top: 2px; }
+.updated { color: var(--ink-3); font-size: 13px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sync { appearance: none; border: 1px solid var(--line); background: var(--surface-2); color: var(--brand); font-weight: 600; font-size: 13px; border-radius: 8px; padding: 6px 10px; cursor: pointer; min-height: 34px; }
+.sync[disabled] { color: var(--ink-3); cursor: default; }
+.tabs { display: flex; gap: 4px; margin-top: 14px; }
+.tab { appearance: none; border: 0; background: none; cursor: pointer; font-weight: 600; font-size: 15px; color: var(--ink-2); padding: 10px 14px 12px; border-bottom: 3px solid transparent; flex: 1 1 0; max-width: 260px; }
+.tab[aria-selected="true"] { color: var(--brand); border-bottom-color: var(--brand); }
+
+/* filters */
+.filters { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--page); border-bottom: 1px solid var(--line); }
+.filters .wrap { padding-block: 12px; }
+.filter-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto; gap: 10px; align-items: end; }
+.filter-grid label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-2); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+select, button.reset { width: 100%; min-height: 44px; font-size: 15px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+select:disabled { color: var(--ink-3); }
+button.reset { cursor: pointer; font-weight: 600; color: var(--brand); width: auto; padding: 8px 16px; }
+.crumb { margin-top: 10px; font-size: 14px; color: var(--ink-2); }
+.crumb b { color: var(--ink); }
+
+/* sections */
+.section-title { font-size: 17px; margin: 30px 0 4px; text-wrap: balance; }
+.section-note { color: var(--ink-2); font-size: 14px; margin: 0 0 12px; max-width: 70ch; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); min-width: 0; }
+.panel.tight { padding: 6px 12px; }
+
+/* scorecards */
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); min-width: 0; }
+.kpi .label { font-size: 14px; color: var(--ink-2); font-weight: 500; }
+.kpi .value { font-size: 30px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.kpi .value small { font-size: 15px; font-weight: 600; color: var(--ink-2); margin-left: 4px; }
+.kpi .value .bigpct { margin-left: 12px; color: var(--brand); }
+.kpi .hint { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+.kpi.target { border-color: var(--brand); }
+.meter { height: 8px; background: var(--surface-2); border-radius: 4px; margin-top: 10px; overflow: hidden; border: 1px solid var(--line); }
+.meter span { display: block; height: 100%; background: var(--bar); border-radius: 0 4px 4px 0; }
+
+/* status cards */
+.status-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.status { border-radius: var(--radius); padding: 14px 16px; border: 1px solid var(--line); background: var(--surface); min-width: 0; }
+.status .s-head { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; }
+.status .s-num { font-size: 28px; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.status .s-num small { font-size: 15px; color: var(--ink-2); font-weight: 600; margin-left: 4px; }
+.status .s-def { font-size: 13px; color: var(--ink-2); margin-top: 2px; }
+.status.good { background: var(--good-soft); } .status.good .s-head { color: var(--good-ink); }
+.status.warn { background: var(--warn-soft); } .status.warn .s-head { color: var(--warn-ink); }
+.status.bad { background: var(--bad-soft); } .status.bad .s-head { color: var(--bad-ink); }
+.dot { width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center; color: #fff; font-size: 13px; font-weight: 700; flex: none; }
+.dot.good { background: var(--good); } .dot.warn { background: var(--warn); color: #3a2800; } .dot.bad { background: var(--bad); } .dot.none { background: var(--none); color: var(--ink); }
+
+/* teacher bar: each label sits right under its own colour */
+.tbar { display: flex; gap: 3px; }
+.tbar .seg { min-width: 84px; }
+.tbar .seg i { display: block; height: 30px; border-radius: 6px; }
+.tbar .seg .t-name { font-size: 13px; color: var(--ink-2); margin-top: 8px; line-height: 1.25; }
+.tbar .seg .t-num { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tbar .seg .t-num small { font-size: 13px; font-weight: 600; color: var(--ink-2); margin-left: 3px; }
+
+/* horizontal bars */
+.hbars { display: grid; gap: 10px; }
+.hbar { display: grid; grid-template-columns: minmax(110px, 220px) minmax(0, 1fr) 64px; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; border-radius: 6px; }
+.hbar:hover .name { color: var(--brand); }
+.hbar .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hbar .track { height: 22px; background: var(--surface-2); border-radius: 4px; position: relative; overflow: hidden; }
+.hbar .fill { height: 100%; border-radius: 0 4px 4px 0; background: var(--bar); }
+.hbar .target-line { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink-2); }
+.hbar .num { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hbar.zero .name, .hbar.zero .num { color: var(--ink-3); }
+
+/* tables (become cards on phones) */
+.table-scroll { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.data th { text-align: left; font-size: 12px; letter-spacing: .02em; color: var(--ink-2); font-weight: 600; padding: 10px; border-bottom: 2px solid var(--line); vertical-align: bottom; line-height: 1.3; }
+table.data th .th-sub { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; }
+table.data td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: middle; font-variant-numeric: tabular-nums; }
+table.data th.n, table.data td.n { text-align: right; }
+table.data tr.total td { font-weight: 700; border-top: 2px solid var(--line); background: var(--surface-2); }
+table.data tbody tr.click { cursor: pointer; }
+table.data tbody tr.click:hover td { background: var(--brand-soft); }
+.go { color: var(--brand); font-weight: 600; }
+.pct { color: var(--ink-3); font-size: 12px; margin-left: 4px; }
+.stackcount { display: flex; gap: 12px; font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+.stackcount b { font-variant-numeric: tabular-nums; }
+.stackcount .g { color: var(--good-ink); } .stackcount .y { color: var(--warn-ink); } .stackcount .r { color: var(--bad-ink); }
+.tag { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; white-space: nowrap; }
+.tag.good { color: var(--good-ink); } .tag.warn { color: var(--warn-ink); } .tag.bad { color: var(--bad-ink); } .tag.none { color: var(--ink-3); }
+.yes { color: var(--good-ink); font-weight: 600; }
+.notyet { color: var(--ink-3); }
+
+.more { display: flex; justify-content: center; padding: 12px 0 6px; }
+.more button { appearance: none; border: 1px solid var(--line); background: var(--surface); color: var(--brand); font-weight: 600; font-size: 14px; border-radius: 999px; padding: 8px 18px; cursor: pointer; min-height: 40px; }
+.empty { color: var(--ink-2); padding: 18px; text-align: center; background: var(--surface-2); border-radius: 10px; }
+.banner { margin-top: 16px; padding: 12px 14px; border-radius: 10px; background: var(--warn-soft); color: var(--ink); font-size: 14px; }
+.banner.info { background: var(--brand-soft); }
+.loading { padding: 60px 0; text-align: center; color: var(--ink-2); }
+
+/* single school view */
+.school-card { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+.school-card div { padding: 12px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; }
+.school-card div span:first-child { color: var(--ink-2); }
+.school-card div span:last-child { font-weight: 600; text-align: right; }
+footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
+
+@media (max-width: 860px) {
+  .kpis, .status-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filter-grid .reset-wrap { grid-column: 1 / -1; }
+  button.reset { width: 100%; }
+}
+@media (max-width: 600px) {
+  h1 { font-size: 19px; }
+  .kpi .value { font-size: 24px; }
+  .status .s-num { font-size: 22px; }
+  .kpi, .status { padding: 12px; }
+  .kpis, .status-row { gap: 8px; }
+  .filters { position: static; }
+  .tbar .seg { min-width: 76px; }
+  .hbar { grid-template-columns: minmax(0, 1fr) 52px; grid-template-areas: "name num" "track track"; gap: 4px 8px; }
+  .hbar .name { grid-area: name; } .hbar .num { grid-area: num; } .hbar .track { grid-area: track; height: 14px; }
+  .school-card { grid-template-columns: minmax(0, 1fr); }
+  .table-scroll { overflow: visible; }
+  table.data thead { display: none; }
+  table.data, table.data tbody, table.data tr, table.data td { display: block; width: 100%; }
+  table.data tr { border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; padding: 6px 12px; background: var(--surface); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; }
+  table.data td { border: 0; padding: 4px 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; text-align: right !important; font-size: 13px; }
+  table.data td::before { content: attr(data-label); color: var(--ink-2); font-weight: 500; text-align: left; }
+  table.data td.first, table.data td.wide, table.data td.full, table.data td.first2 { grid-column: 1 / -1; }
+  table.data td.first2 { order: -1; font-weight: 700; font-size: 15px; border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 2px; }
+  table.data td.first2::before { content: none; }
+  table.data td.first { font-weight: 700; font-size: 15px; border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 2px; }
+  table.data td.first::before { content: none; }
+  table.data td.wide { display: block; text-align: left !important; }
+  table.data td.wide::before { display: block; margin-bottom: 4px; }
+  table.data tr.total td { background: none; }
+  table.data tr.total { background: var(--brand-soft); }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="title-row">
+      <div>
+        <h1 id="title">PBA School Dashboard</h1>
+        <div class="sub" id="subtitle"></div>
+      </div>
+      <div class="updated"><span id="updated">Loading data…</span><button class="sync" id="sync" type="button" hidden>Update from Google Sheet</button></div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-assignment" data-page="assignment" aria-selected="true">📘 Project Assignment</button>
+      <button class="tab" role="tab" id="tab-competition" data-page="competition" aria-selected="false">🏆 School Competition</button>
+    </nav>
+  </div>
+</header>
+
+<div class="filters">
+  <div class="wrap">
+    <div class="filter-grid">
+      <div><label for="f-province">Province</label><select id="f-province"></select></div>
+      <div><label for="f-district">District</label><select id="f-district"></select></div>
+      <div><label for="f-sector">Sector</label><select id="f-sector"></select></div>
+      <div><label for="f-school">School</label><select id="f-school"></select></div>
+      <div class="reset-wrap"><button class="reset" id="reset" type="button">Show all</button></div>
+    </div>
+    <div class="crumb" id="crumb"></div>
+  </div>
+</div>
+
+<main class="wrap" id="main"><div class="loading">Loading data…</div></main>
+<div class="wrap"><footer id="footer"></footer></div>
+
+<script>
+(function () {
+  "use strict";
+  const S = SETTINGS;
+  const LEVELS = ["province", "district", "sector", "school"];
+  const LEVEL_NAME = { province: "Province", district: "District", sector: "Sector", school: "School" };
+  const PLURAL = { province: "provinces", district: "districts", sector: "sectors", school: "schools" };
+  let ALL = [];
+  let state = { page: "assignment", province: "", district: "", sector: "", school: "" };
+  const expanded = new Set(); // lists the viewer chose to show in full
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmt = (n) => Number(n).toLocaleString("en-US");
+  const pct = (a, b) => (b > 0 ? Math.round((a / b) * 100) : 0);
+  const norm = (s) => String(s || "").trim().toLowerCase().replace(/\s+/g, " ");
+  const isYes = (v) => /^\s*(yes|y|1|true)\s*$/i.test(v || "");
+
+  // ---------- reading the sheet ----------
+  function parseCSV(text) {
+    const rows = []; let row = []; let field = ""; let q = false;
+    text = text.replace(/^﻿/, "");
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) { if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else q = false; } else field += c; }
+      else if (c === '"') q = true;
+      else if (c === ",") { row.push(field); field = ""; }
+      else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(field); rows.push(row); row = []; field = ""; }
+      else field += c;
+    }
+    if (field !== "" || row.length) { row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  // Columns are found by their header name, so the column order does not matter
+  const COLS = {
+    province: ["province"], district: ["district"], sector: ["sector"],
+    school: ["school_name", "school name"],
+    comp: ["school level competition"],
+    s5: ["s5 students"], s6: ["s6 students"], total: ["total students"],
+    downloaded: ["school downloaded projects"],
+    dos: ["school submitted dos survey ontime", "school submitted dos survey on time"],
+    tTotal: ["school total pba teachers"],
+    tAll: ["school pba teachers assigned in all classes"],
+    tSome: ["school pba teachers assigned in some of classes", "school pba teachers assigned in some classes"],
+    tNone: ["school pba teachers did not assigned", "school pba teachers did not assign"]
+  };
+
+  // rows (first row = headers) -> compact records (no school code kept)
+  function rowsToRecords(rows) {
+    if (!rows || !rows.length) throw new Error("The data is empty.");
+    const head = rows[0].map(norm);
+    const idx = {};
+    for (const k in COLS) idx[k] = head.findIndex((h) => COLS[k].includes(h));
+    const missing = ["province", "district", "sector", "school"].filter((k) => idx[k] < 0);
+    if (missing.length) throw new Error("These columns were not found: " + missing.join(", "));
+    const get = (r, k) => (idx[k] >= 0 ? String(r[idx[k]] ?? "").trim() : "");
+    const num = (r, k) => { const v = get(r, k); if (v === "") return null; const n = parseFloat(v.replace(/,/g, "")); return isNaN(n) ? null : n; };
+    const out = [];
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i] || [];
+      const school = get(r, "school"), province = get(r, "province");
+      if (!school || !province) continue;
+      const s5 = num(r, "s5") || 0, s6 = num(r, "s6") || 0;
+      let total = num(r, "total"); if (total === null) total = s5 + s6;
+      out.push({
+        province, district: get(r, "district"), sector: get(r, "sector"), school,
+        comp: (num(r, "comp") || 0) > 0 || isYes(get(r, "comp")) ? 1 : 0,
+        s5, s6, students: total,
+        downloaded: isYes(get(r, "downloaded")) ? 1 : 0,
+        dos: isYes(get(r, "dos")) ? 1 : 0,
+        tTotal: num(r, "tTotal") || 0, tAll: num(r, "tAll") || 0, tSome: num(r, "tSome") || 0, tNone: num(r, "tNone") || 0
+      });
+    }
+    return out;
+  }
+  function enrich(s) {
+    let status = "none";
+    if (s.tTotal > 0) {
+      const p = ((s.tAll + (S.COUNT_SOME_AS_ASSIGNED ? s.tSome : 0)) / s.tTotal) * 100;
+      status = p > S.GREEN_ABOVE ? "good" : p < S.RED_BELOW ? "bad" : "warn";
+    }
+    return Object.assign({}, s, { status, hasTeachers: s.tTotal > 0, met40: s.students >= S.TARGET_STUDENTS, metBoth: s.s5 >= S.TARGET_EACH && s.s6 >= S.TARGET_EACH, comp: !!s.comp, downloaded: !!s.downloaded, dos: !!s.dos });
+  }
+
+  // ---------- filters ----------
+  const uniq = (arr) => [...new Set(arr)].sort((a, b) => a.localeCompare(b));
+  const filtered = (upTo) => ALL.filter((s) => LEVELS.slice(0, upTo ?? 4).every((l) => !state[l] || s[l] === state[l]));
+  // level used for comparisons: districts when nothing is chosen (provinces are too few to compare)
+  function childLevel() { let i = -1; LEVELS.forEach((l, k) => { if (state[l]) i = k; }); return i < 0 ? "district" : i < 3 ? LEVELS[i + 1] : null; }
+  function fillSelect(level, idx) {
+    const sel = $("f-" + level);
+    const ok = idx === 0 || state[LEVELS[idx - 1]];
+    const opts = ok ? uniq(filtered(idx).map((s) => s[level])) : [];
+    if (ALL.length && state[level] && !opts.includes(state[level])) state[level] = "";
+    sel.innerHTML = `<option value="">${ok ? "All " + PLURAL[level] : "Choose " + LEVEL_NAME[LEVELS[idx - 1]].toLowerCase() + " first"}</option>` +
+      opts.map((o) => `<option${o === state[level] ? " selected" : ""}>${esc(o)}</option>`).join("");
+    sel.disabled = !ok;
+  }
+  function readHash() {
+    const p = new URLSearchParams(location.hash.slice(1));
+    state.page = p.get("page") === "competition" ? "competition" : "assignment";
+    LEVELS.forEach((l) => (state[l] = p.get(l) || ""));
+  }
+  function writeHash() {
+    const p = new URLSearchParams(); p.set("page", state.page);
+    LEVELS.forEach((l) => state[l] && p.set(l, state[l]));
+    try { history.replaceState(null, "", "#" + p.toString()); } catch (e) { /* some viewers do not allow it */ }
+  }
+
+  // ---------- helpers ----------
+  function groupBy(list, level) {
+    const m = new Map();
+    list.forEach((s) => { if (!m.has(s[level])) m.set(s[level], []); m.get(s[level]).push(s); });
+    return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  }
+  const sum = (list, k) => list.reduce((a, s) => a + (s[k] || 0), 0);
+  const count = (list, f) => list.reduce((a, s) => a + (f(s) ? 1 : 0), 0);
+  const assignedOf = (s) => s.tAll + (S.COUNT_SOME_AS_ASSIGNED ? s.tSome : 0);
+
+  function kpi(label, value, extra, hint, meterPct, cls) {
+    return `<div class="kpi ${cls || ""}"><div class="label">${label}</div><div class="value">${value}${extra ? `<small>${extra}</small>` : ""}</div>` +
+      (hint ? `<div class="hint">${hint}</div>` : "") +
+      (meterPct !== undefined ? `<div class="meter" role="img" aria-label="${meterPct}%"><span style="width:${meterPct}%"></span></div>` : "") + `</div>`;
+  }
+  function tag(st) {
+    const m = { good: ["✓", "Green"], warn: ["!", "Yellow"], bad: ["✕", "Red"], none: ["–", "Not yet reported"] };
+    return `<span class="tag ${st}"><span class="dot ${st}">${m[st][0]}</span>${m[st][1]}</span>`;
+  }
+  const yesNo = (v, no) => (v ? `<span class="yes">Yes</span>` : `<span class="notyet">${no}</span>`);
+  const numPct = (a, b) => `${fmt(a)}<span class="pct">${pct(a, b)}%</span>`;
+  const statusCounts = (g, y, r) => `<div class="stackcount"><span class="g">✓ <b>${g}</b> Green</span><span class="y">! <b>${y}</b> Yellow</span><span class="r">✕ <b>${r}</b> Red</span></div>`;
+  // s: the school itself (school rows); p: any school inside the area (district / sector rows)
+  function drillAttr(level, name, s, p) {
+    if (!level) return "";
+    let extra = s ? ` data-sector="${esc(s.sector)}" data-district="${esc(s.district)}"` : "";
+    if (p) extra += ` data-province="${esc(p.province)}"` + (level === "sector" ? ` data-district="${esc(p.district)}"` : "");
+    return `class="click" data-level="${level}" data-name="${esc(name)}"${extra} tabindex="0"`;
+  }
+  // Show only the first N rows of a list, with a button to show the rest
+  function limitRows(key, rows, n) {
+    n = n || S.LIST_LIMIT;
+    if (rows.length <= n) return { html: rows.join(""), more: "" };
+    const open = expanded.has(key);
+    return {
+      html: (open ? rows : rows.slice(0, n)).join(""),
+      more: `<div class="more"><button type="button" data-more="${esc(key)}">${open ? "Show first " + n + " only" : "Show all " + fmt(rows.length)}</button></div>`
+    };
+  }
+  const row2 = (a, b) => `<div><span>${esc(a)}</span><span>${b}</span></div>`;
+  function crumbText() {
+    const parts = LEVELS.filter((l) => state[l]).map((l) => `<b>${esc(state[l])}</b>`);
+    return parts.length ? "Showing: " + parts.join(" › ") : "Showing: <b>All provinces</b>";
+  }
+  const listKey = (name) => state.page + "|" + LEVELS.map((l) => state[l]).join("|") + "|" + name;
+
+  // ============================================================
+  // PAGE 1: PROJECT ASSIGNMENT
+  // ============================================================
+  // share of PBA teachers who assigned projects (null = not reported)
+  const assignedShare = (gg) => { const tt = sum(gg, "tTotal"); return tt ? gg.reduce((a, s) => a + assignedOf(s), 0) / tt : null; };
+  const lowFirst = (a, b) => (a === null) - (b === null) || (a ?? 0) - (b ?? 0);
+
+  function renderAssignment() {
+    const list = filtered(), n = list.length;
+    const dl = count(list, (s) => s.downloaded), dos = count(list, (s) => s.dos);
+    const tT = sum(list, "tTotal"), tA = sum(list, "tAll"), tS = sum(list, "tSome"), tN = sum(list, "tNone");
+    const assigned = list.reduce((a, s) => a + assignedOf(s), 0);
+    const g = count(list, (s) => s.status === "good"), y = count(list, (s) => s.status === "warn"), r = count(list, (s) => s.status === "bad"), nr = count(list, (s) => s.status === "none");
+
+    if (state.school) {
+      const s = list[0];
+      return `<h2 class="section-title">${esc(s.school)}</h2><p class="section-note">${esc(s.sector)} sector, ${esc(s.district)} district, ${esc(s.province)} province</p>` +
+        `<div class="panel"><div class="school-card">` +
+        row2("School status", tag(s.status)) +
+        row2("Downloaded projects", yesNo(s.downloaded, "Not yet done")) +
+        row2("DOS survey on time", yesNo(s.dos, "Not yet")) +
+        row2("PBA teachers", s.hasTeachers ? fmt(s.tTotal) : `<span class="notyet">Not yet reported</span>`) +
+        row2("Assigned in all classes", fmt(s.tAll)) + row2("Assigned in some classes", fmt(s.tSome)) +
+        row2("Did not assign", fmt(s.tNone)) +
+        row2("Teachers who assigned", s.hasTeachers ? `${fmt(assignedOf(s))} (${pct(assignedOf(s), s.tTotal)}%)` : "–") +
+        `</div></div>`;
+    }
+
+    let h = `<div class="kpis">` +
+      kpi("Schools", fmt(n), "", "Active PBA schools") +
+      kpi("Downloaded projects", fmt(dl), `${pct(dl, n)}%`, `${fmt(n - dl)} not yet done`, pct(dl, n)) +
+      kpi("DOS survey on time", fmt(dos), `${pct(dos, n)}%`, `${fmt(n - dos)} not yet`, pct(dos, n)) +
+      kpi("PBA teachers who assigned projects", fmt(assigned), tT ? `${pct(assigned, tT)}%` : "", tT ? `of ${fmt(tT)} PBA teachers` : "Not yet reported", tT ? pct(assigned, tT) : undefined) +
+      `</div>`;
+
+    h += `<h2 class="section-title">School status</h2><p class="section-note">Each school gets a colour from the share of its PBA teachers who assigned projects.</p>`;
+    h += `<div class="status-row">` +
+      statusBox("good", "✓", "Green schools", g, n, `More than ${S.GREEN_ABOVE}% of teachers assigned`) +
+      statusBox("warn", "!", "Yellow schools", y, n, `Between ${S.RED_BELOW}% and ${S.GREEN_ABOVE}% assigned`) +
+      statusBox("bad", "✕", "Red schools", r, n, `Less than ${S.RED_BELOW}% of teachers assigned`) +
+      `<div class="status"><div class="s-head"><span class="dot none">–</span>Not yet reported</div><div class="s-num">${fmt(nr)}<small>${pct(nr, n)}%</small></div><div class="s-def">No teacher numbers entered yet</div></div>` +
+      `</div>`;
+
+    h += `<h2 class="section-title">How PBA teachers are assigning projects</h2>`;
+    if (!tT) h += `<div class="empty">Teacher numbers are not yet reported here.</div>`;
+    else {
+      const seg = (k, color, label) => k ? `<div class="seg" style="flex:${k} 1 0"><i style="background:${color}"></i><div class="t-name">${label}</div><div class="t-num">${fmt(k)}<small>${pct(k, tT)}%</small></div></div>` : "";
+      h += `<p class="section-note">Out of ${fmt(tT)} PBA teachers.</p><div class="panel"><div class="tbar" role="img" aria-label="Of ${tT} teachers: ${tA} assigned in all classes, ${tS} in some classes, ${tN} did not assign">` +
+        seg(tA, "var(--good)", "Assigned in all classes") + seg(tS, "var(--warn)", "Assigned in some classes") + seg(tN, "var(--bad)", "Did not assign") +
+        `</div></div>`;
+    }
+
+    const child = childLevel();
+    if (child === "school") {
+      h += `<h2 class="section-title">Schools in ${esc(state.sector)} sector</h2><p class="section-note">Lowest share of teachers who assigned first. Tap a school to see its details.</p>`;
+      const sorted = list.slice().sort((a, b) => lowFirst(assignedShare([a]), assignedShare([b])) || a.school.localeCompare(b.school));
+      const rows = sorted.map((s) => `<tr ${drillAttr("school", s.school, s)}><td class="first"><span class="go">${esc(s.school)}</span></td>` +
+        `<td data-label="Status">${tag(s.status)}</td><td data-label="Downloaded projects">${yesNo(s.downloaded, "Not yet done")}</td><td data-label="DOS survey on time">${yesNo(s.dos, "Not yet")}</td>` +
+        `<td class="n" data-label="PBA teachers">${s.hasTeachers ? fmt(s.tTotal) : "–"}</td><td class="n" data-label="Teachers who assigned">${s.hasTeachers ? fmt(assignedOf(s)) + `<span class="pct">${pct(assignedOf(s), s.tTotal)}%</span>` : "–"}</td></tr>`);
+      const L = limitRows(listKey("schools"), rows, S.SCHOOL_LIST_LIMIT);
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>School</th><th>Status</th><th>Downloaded projects</th><th>DOS survey on time</th><th class="n">PBA teachers</th><th class="n">Teachers who assigned</th></tr></thead><tbody>${L.html}</tbody></table></div>${L.more}</div>`;
+    } else {
+      const lvl = LEVEL_NAME[child].toLowerCase();
+      h += `<h2 class="section-title">Comparison by ${lvl}</h2>`;
+      h += `<p class="section-note">Each row is one ${lvl}, starting with the lowest share of PBA teachers who assigned projects. Numbers count schools; the % is the share of that ${lvl}'s schools. Tap a ${lvl} to look inside it.</p>`;
+      const line = (label, gg, attrs, cls) => {
+        const k = gg.length, tt = sum(gg, "tTotal"), as = gg.reduce((a, s) => a + assignedOf(s), 0);
+        return `<tr ${attrs || ""} ${cls ? `class="${cls}"` : ""}><td class="first">${attrs ? `<span class="go">${esc(label)}</span>` : esc(label)}</td>` +
+          `<td class="n" data-label="Schools">${fmt(k)}</td>` +
+          `<td class="n full" data-label="Teachers who assigned">${tt ? `${fmt(as)} of ${fmt(tt)}<span class="pct">${pct(as, tt)}%</span>` : "–"}</td>` +
+          `<td class="n" data-label="Downloaded projects">${numPct(count(gg, (s) => s.downloaded), k)}</td>` +
+          `<td class="n" data-label="DOS survey on time">${numPct(count(gg, (s) => s.dos), k)}</td>` +
+          `<td class="wide" data-label="School status">${statusCounts(count(gg, (s) => s.status === "good"), count(gg, (s) => s.status === "warn"), count(gg, (s) => s.status === "bad"))}</td></tr>`;
+      };
+      const groups = groupBy(list, child).sort((a, b) => lowFirst(assignedShare(a[1]), assignedShare(b[1])) || a[0].localeCompare(b[0]));
+      const rows = groups.map(([name, gg]) => line(name, gg, drillAttr(child, name, null, gg[0])));
+      const L = limitRows(listKey("compare"), rows);
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr>` +
+        `<th>${LEVEL_NAME[child]}</th><th class="n">Schools</th>` +
+        `<th class="n">Teachers who assigned<span class="th-sub">PBA teachers, all or some classes</span></th>` +
+        `<th class="n">Downloaded projects<span class="th-sub">schools that downloaded</span></th>` +
+        `<th class="n">DOS survey on time<span class="th-sub">schools that submitted</span></th>` +
+        `<th>School status<span class="th-sub">number of schools by colour</span></th>` +
+        `</tr></thead><tbody>${L.html}${line("Total", list, "", "total")}</tbody></table></div>${L.more}</div>`;
+
+      // Schools that need support: Red and Yellow only
+      const need = list.filter((s) => s.status === "bad" || s.status === "warn")
+        .sort((a, b) => (a.status === b.status ? 0 : a.status === "bad" ? -1 : 1) || lowFirst(assignedShare([a]), assignedShare([b])) || a.district.localeCompare(b.district) || a.sector.localeCompare(b.sector) || a.school.localeCompare(b.school));
+      h += `<h2 class="section-title">Schools that need support (${fmt(need.length)})</h2>`;
+      h += `<p class="section-note">Red and Yellow schools, Red first, then the lowest share of teachers who assigned. Use the filters above to see one district or sector.</p>`;
+      if (!need.length) h += `<div class="empty">No Red or Yellow schools here.</div>`;
+      else {
+        const rows2 = need.map((s) => `<tr ${drillAttr("school", s.school, s)}><td data-label="District">${esc(s.district)}</td><td data-label="Sector">${esc(s.sector)}</td><td class="first2" data-label="School"><span class="go">${esc(s.school)}</span></td><td data-label="Status">${tag(s.status)}</td><td class="n" data-label="Teachers who assigned">${fmt(assignedOf(s))} of ${fmt(s.tTotal)}<span class="pct">${pct(assignedOf(s), s.tTotal)}%</span></td></tr>`);
+        const L2 = limitRows(listKey("support"), rows2, S.SCHOOL_LIST_LIMIT);
+        h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>District</th><th>Sector</th><th>School</th><th>Status</th><th class="n">Teachers who assigned</th></tr></thead><tbody>${L2.html}</tbody></table></div>${L2.more}</div>`;
+      }
+    }
+    return h;
+  }
+  function statusBox(cls, icon, label, k, n, def) {
+    return `<div class="status ${cls}"><div class="s-head"><span class="dot ${cls}">${icon}</span>${label}</div><div class="s-num">${fmt(k)}<small>${pct(k, n)}%</small></div><div class="s-def">${def}</div></div>`;
+  }
+
+  // ============================================================
+  // PAGE 2: SCHOOL COMPETITION
+  // ============================================================
+  function bigKpi(label, num, of, p, cls) {
+    return `<div class="kpi ${cls || ""}"><div class="label">${label}</div><div class="value">${num}${of ? `<small>of ${of}</small>` : ""}${p !== undefined ? `<span class="bigpct">${p}%</span>` : ""}</div>` +
+      (p !== undefined ? `<div class="meter" role="img" aria-label="${p}%"><span style="width:${p}%"></span></div>` : "") + `</div>`;
+  }
+  function renderCompetition() {
+    const list = filtered(), n = list.length;
+    const held = list.filter((s) => s.comp);
+    const met = count(list, (s) => s.met40);
+    const st = sum(held, "students");
+    const T = S.TARGET_STUDENTS, E = S.TARGET_EACH;
+
+    if (state.school) {
+      const s = list[0];
+      return `<h2 class="section-title">${esc(s.school)}</h2><p class="section-note">${esc(s.sector)} sector, ${esc(s.district)} district, ${esc(s.province)} province</p>` +
+        `<div class="panel"><div class="school-card">` +
+        row2("Held a school competition", yesNo(s.comp, "Not yet done")) +
+        row2(`Reached ${T} students`, s.met40 ? `<span class="yes">Yes</span>` : `<span class="notyet">Not yet</span>`) +
+        row2("Students who signed up", fmt(s.students)) +
+        row2(`S5 / S6 (target ${E} each)`, `${fmt(s.s5)} / ${fmt(s.s6)}`) +
+        `</div></div>`;
+    }
+
+    let h = `<div class="kpis">` +
+      bigKpi("Schools that held a competition", fmt(held.length), fmt(n), pct(held.length, n)) +
+      bigKpi(`Schools with at least ${T} students`, fmt(met), fmt(n), pct(met, n), "target") +
+      bigKpi("Students who signed up", fmt(st)) +
+      bigKpi("Average students per school", held.length ? fmt(Math.round(st / held.length)) : "–") +
+      `</div>`;
+
+    const child = childLevel();
+    const lvl = LEVEL_NAME[child].toLowerCase();
+    const yes40 = (s) => (s.met40 ? `<span class="yes">Yes</span>` : `<span class="notyet">Not yet</span>`);
+
+    if (child === "school") {
+      h += `<h2 class="section-title">Schools in ${esc(state.sector)} sector</h2><p class="section-note">Fewest students first. Tap a school for details.</p>`;
+      const rows = list.slice().sort((a, b) => a.students - b.students || a.school.localeCompare(b.school)).map((s) =>
+        `<tr ${drillAttr("school", s.school, s)}><td class="first"><span class="go">${esc(s.school)}</span></td><td data-label="Competition">${yesNo(s.comp, "Not yet done")}</td>` +
+        `<td class="n" data-label="Students">${fmt(s.students)}</td><td data-label="${T}+ students">${yes40(s)}</td></tr>`);
+      const L = limitRows(listKey("schools"), rows, S.SCHOOL_LIST_LIMIT);
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>School</th><th>Competition</th><th class="n">Students</th><th>${T}+ students</th></tr></thead><tbody>${L.html}</tbody></table></div>${L.more}</div>`;
+      return h;
+    }
+
+    // share of schools that reached the target, then share that held one, then students
+    const rank = (gg) => [count(gg, (s) => s.met40) / gg.length, count(gg, (s) => s.comp) / gg.length, sum(gg.filter((s) => s.comp), "students")];
+    const groups = groupBy(list, child).sort((a, b) => { const ra = rank(a[1]), rb = rank(b[1]); return ra[0] - rb[0] || ra[1] - rb[1] || ra[2] - rb[2] || a[0].localeCompare(b[0]); });
+
+    h += `<h2 class="section-title">Students who signed up, by ${lvl}</h2><p class="section-note">Lowest first. Tap a name to look inside it.</p>`;
+    const max = Math.max(1, ...groups.map(([, gg]) => sum(gg.filter((s) => s.comp), "students")));
+    const stOf = (gg) => sum(gg.filter((s) => s.comp), "students");
+    const bars = groups.slice().sort((a, b) => stOf(a[1]) - stOf(b[1]) || a[0].localeCompare(b[0])).map(([name, gg]) => { const v = stOf(gg);
+      return `<div class="hbar ${v ? "" : "zero"}" ${drillAttr(child, name, null, gg[0]).replace('class="click" ', "")} role="button" title="${esc(name)}: ${fmt(v)} students from ${count(gg, (s) => s.comp)} of ${gg.length} schools">` +
+        `<div class="name">${esc(name)}</div><div class="track"><div class="fill" style="width:${(v / max) * 100}%"></div></div><div class="num">${fmt(v)}</div></div>`; });
+    const LB = limitRows(listKey("bars"), bars);
+    h += `<div class="panel"><div class="hbars">${LB.html}</div>${LB.more}</div>`;
+
+    h += `<h2 class="section-title">Comparison by ${lvl}</h2><p class="section-note">Each row is one ${lvl}, starting with the lowest share of schools that reached ${T} students. The % is the share of that ${lvl}'s schools.</p>`;
+    const line = (label, gg, attrs, cls) => {
+      const k = gg.length, gh = gg.filter((s) => s.comp);
+      return `<tr ${attrs || ""} ${cls ? `class="${cls}"` : ""}><td class="first">${attrs ? `<span class="go">${esc(label)}</span>` : esc(label)}</td>` +
+        `<td class="n" data-label="Schools">${fmt(k)}</td><td class="n" data-label="Held competition">${numPct(gh.length, k)}</td>` +
+        `<td class="n" data-label="${T}+ students">${numPct(count(gg, (s) => s.met40), k)}</td>` +
+        `<td class="n" data-label="Students">${fmt(sum(gh, "students"))}</td></tr>`;
+    };
+    const rows = groups.map(([name, gg]) => line(name, gg, drillAttr(child, name, null, gg[0])));
+    const L = limitRows(listKey("compare"), rows);
+    h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>${LEVEL_NAME[child]}</th><th class="n">Schools</th>` +
+      `<th class="n">Held competition<span class="th-sub">schools</span></th><th class="n">${T}+ students<span class="th-sub">schools that reached target</span></th>` +
+      `<th class="n">Students</th></tr></thead><tbody>${L.html}${line("Total", list, "", "total")}</tbody></table></div>${L.more}</div>`;
+
+    h += `<h2 class="section-title">Schools that held a competition (${fmt(held.length)})</h2><p class="section-note">Fewest students first.</p>`;
+    if (!held.length) h += `<div class="empty">No school here has held a competition yet.</div>`;
+    else {
+      const rows2 = held.slice().sort((a, b) => a.students - b.students || a.school.localeCompare(b.school)).map((s) =>
+        `<tr ${drillAttr("school", s.school, s)}><td data-label="District">${esc(s.district)}</td><td data-label="Sector">${esc(s.sector)}</td><td class="first2" data-label="School"><span class="go">${esc(s.school)}</span></td>` +
+        `<td class="n" data-label="Students">${fmt(s.students)}</td><td data-label="${T}+ students">${yes40(s)}</td></tr>`);
+      const L2 = limitRows(listKey("held"), rows2, S.SCHOOL_LIST_LIMIT);
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>District</th><th>Sector</th><th>School</th><th class="n">Students</th><th>${T}+ students</th></tr></thead><tbody>${L2.html}</tbody></table></div>${L2.more}</div>`;
+    }
+    return h;
+  }
+
+  // ---------- render & interaction ----------
+  function render() {
+    LEVELS.forEach(fillSelect);
+    writeHash();
+    document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.page === state.page)));
+    $("crumb").innerHTML = crumbText();
+    if (!ALL.length) return;
+    const list = filtered();
+    if (!list.length) { $("main").innerHTML = `<div class="banner">No schools match this selection.</div>`; return; }
+    $("main").innerHTML = state.page === "competition" ? renderCompetition() : renderAssignment();
+  }
+  function drill(el) {
+    const level = el.dataset.level, name = el.dataset.name;
+    if (level === "school") {
+      const s = ALL.find((x) => x.school === name && (!el.dataset.sector || x.sector === el.dataset.sector) && (!el.dataset.district || x.district === el.dataset.district));
+      if (!s) return;
+      LEVELS.forEach((l) => (state[l] = s[l]));
+    } else {
+      state[level] = name;
+      if (el.dataset.province) state.province = el.dataset.province;
+      if (level === "sector" && el.dataset.district) state.district = el.dataset.district;
+      LEVELS.slice(LEVELS.indexOf(level) + 1).forEach((l) => (state[l] = ""));
+    }
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  $("main").addEventListener("click", (e) => {
+    const m = e.target.closest("[data-more]");
+    if (m) { const k = m.dataset.more; expanded.has(k) ? expanded.delete(k) : expanded.add(k); render(); return; }
+    const el = e.target.closest("[data-level]"); if (el) drill(el);
+  });
+  $("main").addEventListener("keydown", (e) => { if (e.key === "Enter") { const el = e.target.closest("[data-level]"); if (el) drill(el); } });
+  LEVELS.forEach((l, i) => $("f-" + l).addEventListener("change", (e) => { state[l] = e.target.value; LEVELS.slice(i + 1).forEach((x) => (state[x] = "")); render(); }));
+  $("reset").addEventListener("click", () => { LEVELS.forEach((l) => (state[l] = "")); render(); });
+  document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => { state.page = t.dataset.page; render(); }));
+  window.addEventListener("hashchange", () => { readHash(); render(); });
+
+  function setData(records, when, label) {
+    ALL = records.map(enrich);
+    const stamp = when ? new Date(when).toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
+    $("updated").textContent = stamp ? `${label} ${stamp}` : label;
+    $("footer").textContent = `${fmt(ALL.length)} schools · Green: more than ${S.GREEN_ABOVE}% of PBA teachers assigned projects · Red: less than ${S.RED_BELOW}% · Competition target: ${S.TARGET_STUDENTS} students (${S.TARGET_EACH} S5 + ${S.TARGET_EACH} S6) · Blank answers show as "Not yet".`;
+    render();
+  }
+  function showMessage(html, cls) { $("main").innerHTML = `<div class="banner ${cls || ""}">${html}</div>`; }
+
+  // ============================================================
+  // DATA: CSV mode (GitHub)
+  // ============================================================
+  async function loadCSV(first) {
+    try {
+      const url = S.DATA_URL + (S.DATA_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error("Could not load the data (error " + res.status + ").");
+      const text = await res.text();
+      if (/^\s*</.test(text)) throw new Error("The data link returned a web page instead of a CSV file. Check DATA_URL.");
+      const records = rowsToRecords(parseCSV(text));
+      if (!records.length) throw new Error("No schools were found in the data.");
+      let when = null;
+      if (S.DATA_URL.startsWith("data/")) {
+        try { const m = await fetch("data/meta.json?t=" + Date.now(), { cache: "no-store" }); if (m.ok) when = (await m.json()).updated || null; } catch (e) { /* optional */ }
+      }
+      setData(records, when || Date.now(), when ? "Data updated:" : "Data loaded:");
+    } catch (err) {
+      if (first) showMessage(`<b>The dashboard could not load.</b><br>${esc(err.message)}`);
+      console.error(err);
+    }
+  }
+
+  // ============================================================
+  // DATA: Claude mode (the dashboard's own database)
+  // ============================================================
+  async function startClaude() {
+    if (!window.claude || !window.claude.use) { showMessage("Open this dashboard inside Claude to see the data."); return; }
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!db) { showMessage("Sign in to Claude to see this dashboard."); $("updated").textContent = ""; return; }
+    const canSync = user ? !!user.canEdit() : false;
+    const btn = $("sync");
+    if (canSync) btn.hidden = false;
+
+    let districts = null, meta = null, syncing = false, autoTried = false;
+    const apply = () => {
+      if (!districts || !meta) return;
+      const records = [];
+      districts.forEach((d) => (d.rows || []).forEach((r) => records.push({
+        province: d.province, district: d.district, sector: r[0], school: r[1], comp: r[2], s5: r[3], s6: r[4], students: r[5],
+        downloaded: r[6], dos: r[7], tTotal: r[8], tAll: r[9], tSome: r[10], tNone: r[11]
+      })));
+      if (!records.length) {
+        $("updated").textContent = "No data yet";
+        if (canSync && !autoTried) { autoTried = true; sync(); }
+        else if (!canSync) showMessage("No school data has been loaded yet. The dashboard owner loads it from the Google Sheet.", "info");
+        return;
+      }
+      setData(records, meta.updatedAt, "Data updated:");
+    };
+    db.collection("districts").onSnapshot((snap) => { districts = snap.docs.map((d) => d.data()); apply(); },
+      () => showMessage("The data could not be read right now. Reload the page to try again."));
+    db.doc("meta/info").onSnapshot((snap) => { meta = snap.exists ? snap.data() : {}; apply(); }, () => {});
+
+    async function sync() {
+      if (syncing) return;
+      syncing = true; btn.disabled = true; btn.textContent = "Updating…";
+      if (!ALL.length) showMessage("Loading all schools from the Google Sheet…", "info");
+      try {
+        const mcp = await window.claude.use("mcp");
+        if (!mcp) throw { code: "not_granted" };
+        const res = await mcp.callTool("Google Sheets", "get_values", { spreadsheetId: S.SHEET_ID, range: S.SHEET_RANGE }, { cache: false });
+        const p = res.payload;
+        const values = p && Array.isArray(p.values) ? p.values : null;
+        if (!values) throw { code: "bad_shape" };
+        const records = rowsToRecords(values);
+        if (records.length < 10) throw { code: "too_few", n: records.length };
+        // one database document per district (no school codes stored)
+        const byDistrict = new Map();
+        records.forEach((s) => {
+          const key = s.province + "|" + s.district;
+          if (!byDistrict.has(key)) byDistrict.set(key, { province: s.province, district: s.district, rows: [] });
+          byDistrict.get(key).rows.push([s.sector, s.school, s.comp, s.s5, s.s6, s.students, s.downloaded, s.dos, s.tTotal, s.tAll, s.tSome, s.tNone]);
+        });
+        const idOf = (k) => k.replace(/[^A-Za-z0-9_.~:@+-]/g, "_").slice(0, 120);
+        const keep = new Set();
+        for (const [k, doc] of byDistrict) { const id = idOf(k); keep.add(id); await db.collection("districts").doc(id).set(doc); }
+        const old = await db.collection("districts").get();
+        for (const d of old.docs) if (!keep.has(d.id)) await db.collection("districts").doc(d.id).delete();
+        await db.doc("meta/info").set({ updatedAt: Date.now(), schools: records.length });
+      } catch (e) {
+        const code = e && e.code;
+        const msg = {
+          server_not_connected: "Google Sheets is not connected to your Claude account. Add it in Settings → Connectors, then try again.",
+          needs_reauth: "Your Google Sheets connection has expired. Reconnect it in Settings → Connectors, then try again.",
+          not_in_manifest: "This page is not allowed to use Google Sheets. Allow it in the page's Permissions menu, then try again.",
+          not_granted: "This page cannot reach Google Sheets here. Open it in Claude while signed in as the owner.",
+          capability_disabled: "This page cannot reach Google Sheets here. Open it in Claude while signed in as the owner.",
+          tool_error: "Google Sheets could not read the sheet. Check that your account can open it.",
+          bad_shape: "Google Sheets answered in an unexpected way. Nothing was changed.",
+          too_few: "The sheet returned too few schools, so nothing was changed.",
+          server_unavailable: "Google Sheets did not answer. Wait a minute and try again."
+        }[code] || ("The update did not finish" + (e && e.message ? ": " + e.message : ".") + " Try again.");
+        if (ALL.length) $("updated").textContent = msg; else showMessage(esc(msg));
+        console.error(e);
+      } finally {
+        syncing = false; btn.disabled = false; btn.textContent = "Update from Google Sheet";
+      }
+    }
+    btn.addEventListener("click", sync);
+  }
+
+  $("title").textContent = S.TITLE; document.title = S.TITLE;
+  $("subtitle").textContent = S.SUBTITLE;
+  readHash();
+  LEVELS.forEach(fillSelect);
+  if (S.MODE === "claude") startClaude();
+  else { loadCSV(true); if (S.AUTO_REFRESH_MINUTES > 0) setInterval(() => loadCSV(false), S.AUTO_REFRESH_MINUTES * 60000); }
+})();
+</script>
+</body>
+</html>
