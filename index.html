@@ -23,7 +23,7 @@ const SETTINGS = {
 
   // Claude mode: the Google Sheet the owner loads data from
   SHEET_ID: "17X6-nkTtPTP4xxoxCXnYhMW0YxbA8pXnXECMzw-Cag0",
-  SHEET_RANGE: "'Active schools'!A1:U3000",
+  SHEET_RANGE: "'Dashboard feed'!A1:O3000",
 
   TITLE: "PBA School Dashboard",
   SUBTITLE: "Academic Year 2026–2027",
@@ -127,6 +127,7 @@ button.reset { cursor: pointer; font-weight: 600; color: var(--brand); width: au
 
 /* scorecards */
 .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.kpis.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); min-width: 0; }
 .kpi .label { font-size: 14px; color: var(--ink-2); font-weight: 500; }
 .kpi .value { font-size: 30px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; margin-top: 4px; font-variant-numeric: tabular-nums; }
@@ -204,7 +205,8 @@ table.data tbody tr.click:hover td { background: var(--brand-soft); }
 footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
 
 @media (max-width: 860px) {
-  .kpis, .status-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpis, .status-row, .kpis.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpis.three > :last-child { grid-column: 1 / -1; }
   .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .filter-grid .reset-wrap { grid-column: 1 / -1; }
   button.reset { width: 100%; }
@@ -318,7 +320,9 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     tTotal: ["school total pba teachers"],
     tAll: ["school pba teachers assigned in all classes"],
     tSome: ["school pba teachers assigned in some of classes", "school pba teachers assigned in some classes"],
-    tNone: ["school pba teachers did not assigned", "school pba teachers did not assign"]
+    tNone: ["school pba teachers did not assigned", "school pba teachers did not assign"],
+    date: ["competition date", "date of competition"],
+    planned: ["planned competition date"]
   };
 
   // rows (first row = headers) -> compact records (no school code kept)
@@ -344,7 +348,8 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         s5, s6, students: total,
         downloaded: isYes(get(r, "downloaded")) ? 1 : 0,
         dos: isYes(get(r, "dos")) ? 1 : 0,
-        tTotal: num(r, "tTotal") || 0, tAll: num(r, "tAll") || 0, tSome: num(r, "tSome") || 0, tNone: num(r, "tNone") || 0
+        tTotal: num(r, "tTotal") || 0, tAll: num(r, "tAll") || 0, tSome: num(r, "tSome") || 0, tNone: num(r, "tNone") || 0,
+        date: get(r, "date"), planned: get(r, "planned")
       });
     }
     return out;
@@ -422,6 +427,25 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       more: `<div class="more"><button type="button" data-more="${esc(key)}">${open ? "Show first " + n + " only" : "Show all " + fmt(rows.length)}</button></div>`
     };
   }
+  // Dates arrive as 2026-10-02, 22.10.2026, 26/10/2026 or 11-Nov-26 -> shown as "22 Oct 2026"
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  function fmtDate(d) {
+    const t = String(d).trim(); let m;
+    if ((m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(t))) return `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}`;
+    if ((m = /^(\d{1,2})[./](\d{1,2})[./](\d{2,4})$/.exec(t))) { const y = m[3].length === 2 ? "20" + m[3] : m[3]; if (+m[2] >= 1 && +m[2] <= 12) return `${+m[1]} ${MONTHS[+m[2] - 1]} ${y}`; }
+    if ((m = /^(\d{1,2})[- ]([A-Za-z]{3})[A-Za-z]*[- ](\d{2,4})$/.exec(t))) return `${+m[1]} ${m[2][0].toUpperCase() + m[2].slice(1, 3).toLowerCase()} ${m[3].length === 2 ? "20" + m[3] : m[3]}`;
+    return esc(t);
+  }
+  // the scheduled competition date from the tracker, or "Not scheduled"
+  const dateText = (s) => s.date ? fmtDate(s.date) : `<span class="notyet">Not scheduled</span>`;
+  // sortable key for a date: "2026-10-22", or "" when it can't be read
+  function dateKey(d) {
+    const t = String(d || "").trim(); let m;
+    if ((m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(t))) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
+    if ((m = /^(\d{1,2})[./](\d{1,2})[./](\d{2,4})$/.exec(t))) return `${m[3].length === 2 ? "20" + m[3] : m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+    if ((m = /^(\d{1,2})[- ]([A-Za-z]{3})[A-Za-z]*[- ](\d{2,4})$/.exec(t))) { const i = MONTHS.findIndex((x) => x.toLowerCase() === m[2].toLowerCase()); if (i >= 0) return `${m[3].length === 2 ? "20" + m[3] : m[3]}-${String(i + 1).padStart(2, "0")}-${m[1].padStart(2, "0")}`; }
+    return "";
+  }
   const row2 = (a, b) => `<div><span>${esc(a)}</span><span>${b}</span></div>`;
   function crumbText() {
     const parts = LEVELS.filter((l) => state[l]).map((l) => `<b>${esc(state[l])}</b>`);
@@ -472,15 +496,6 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       `<div class="status"><div class="s-head"><span class="dot none">–</span>Not yet reported</div><div class="s-num">${fmt(nr)}<small>${pct(nr, n)}%</small></div><div class="s-def">No teacher numbers entered yet</div></div>` +
       `</div>`;
 
-    h += `<h2 class="section-title">How PBA teachers are assigning projects</h2>`;
-    if (!tT) h += `<div class="empty">Teacher numbers are not yet reported here.</div>`;
-    else {
-      const seg = (k, color, label) => k ? `<div class="seg" style="flex:${k} 1 0"><i style="background:${color}"></i><div class="t-name">${label}</div><div class="t-num">${fmt(k)}<small>${pct(k, tT)}%</small></div></div>` : "";
-      h += `<p class="section-note">Out of ${fmt(tT)} PBA teachers.</p><div class="panel"><div class="tbar" role="img" aria-label="Of ${tT} teachers: ${tA} assigned in all classes, ${tS} in some classes, ${tN} did not assign">` +
-        seg(tA, "var(--good)", "Assigned in all classes") + seg(tS, "var(--warn)", "Assigned in some classes") + seg(tN, "var(--bad)", "Did not assign") +
-        `</div></div>`;
-    }
-
     const child = childLevel();
     if (child === "school") {
       h += `<h2 class="section-title">Schools in ${esc(state.sector)} sector</h2><p class="section-note">Lowest share of teachers who assigned first. Tap a school to see its details.</p>`;
@@ -493,7 +508,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     } else {
       const lvl = LEVEL_NAME[child].toLowerCase();
       h += `<h2 class="section-title">Comparison by ${lvl}</h2>`;
-      h += `<p class="section-note">Each row is one ${lvl}, starting with the lowest share of PBA teachers who assigned projects. Numbers count schools; the % is the share of that ${lvl}'s schools. Tap a ${lvl} to look inside it.</p>`;
+      h += `<p class="section-note">Each row is one ${lvl}, starting with the most Red schools, then the most Yellow schools. Numbers count schools; the % is the share of that ${lvl}'s schools. Tap a ${lvl} to look inside it.</p>`;
       const line = (label, gg, attrs, cls) => {
         const k = gg.length, tt = sum(gg, "tTotal"), as = gg.reduce((a, s) => a + assignedOf(s), 0);
         return `<tr ${attrs || ""} ${cls ? `class="${cls}"` : ""}><td class="first">${attrs ? `<span class="go">${esc(label)}</span>` : esc(label)}</td>` +
@@ -503,7 +518,8 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
           `<td class="n" data-label="DOS survey on time">${numPct(count(gg, (s) => s.dos), k)}</td>` +
           `<td class="wide" data-label="School status">${statusCounts(count(gg, (s) => s.status === "good"), count(gg, (s) => s.status === "warn"), count(gg, (s) => s.status === "bad"))}</td></tr>`;
       };
-      const groups = groupBy(list, child).sort((a, b) => lowFirst(assignedShare(a[1]), assignedShare(b[1])) || a[0].localeCompare(b[0]));
+      const reds = (gg) => count(gg, (s) => s.status === "bad"), yellows = (gg) => count(gg, (s) => s.status === "warn");
+      const groups = groupBy(list, child).sort((a, b) => reds(b[1]) - reds(a[1]) || yellows(b[1]) - yellows(a[1]) || lowFirst(assignedShare(a[1]), assignedShare(b[1])) || a[0].localeCompare(b[0]));
       const rows = groups.map(([name, gg]) => line(name, gg, drillAttr(child, name, null, gg[0])));
       const L = limitRows(listKey("compare"), rows);
       h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr>` +
@@ -552,17 +568,18 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         `<div class="panel"><div class="school-card">` +
         row2("Held a school competition", yesNo(s.comp, "Not yet done")) +
         row2(`Reached ${T} students`, s.met40 ? `<span class="yes">Yes</span>` : `<span class="notyet">Not yet</span>`) +
-        row2("Students who signed up", fmt(s.students)) +
+        row2("Competition date", dateText(s)) +
+        row2("Total students", fmt(s.students)) +
         row2(`S5 / S6 (target ${E} each)`, `${fmt(s.s5)} / ${fmt(s.s6)}`) +
         `</div></div>`;
     }
 
-    let h = `<div class="kpis">` +
+    let h = `<div class="kpis three">` +
       bigKpi("Schools that held a competition", fmt(held.length), fmt(n), pct(held.length, n)) +
       bigKpi(`Schools with at least ${T} students`, fmt(met), fmt(n), pct(met, n), "target") +
-      bigKpi("Students who signed up", fmt(st)) +
-      bigKpi("Average students per school", held.length ? fmt(Math.round(st / held.length)) : "–") +
+      bigKpi("Total students", fmt(st)) +
       `</div>`;
+    const dateCell = (s) => `<td data-label="Competition date">${dateText(s)}</td>`;
 
     const child = childLevel();
     const lvl = LEVEL_NAME[child].toLowerCase();
@@ -571,10 +588,10 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     if (child === "school") {
       h += `<h2 class="section-title">Schools in ${esc(state.sector)} sector</h2><p class="section-note">Fewest students first. Tap a school for details.</p>`;
       const rows = list.slice().sort((a, b) => a.students - b.students || a.school.localeCompare(b.school)).map((s) =>
-        `<tr ${drillAttr("school", s.school, s)}><td class="first"><span class="go">${esc(s.school)}</span></td><td data-label="Competition">${yesNo(s.comp, "Not yet done")}</td>` +
-        `<td class="n" data-label="Students">${fmt(s.students)}</td><td data-label="${T}+ students">${yes40(s)}</td></tr>`);
+        `<tr ${drillAttr("school", s.school, s)}><td class="first"><span class="go">${esc(s.school)}</span></td>${dateCell(s)}` +
+        `<td class="n" data-label="Total students">${fmt(s.students)}</td><td data-label="${T}+ students">${yes40(s)}</td></tr>`);
       const L = limitRows(listKey("schools"), rows, S.SCHOOL_LIST_LIMIT);
-      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>School</th><th>Competition</th><th class="n">Students</th><th>${T}+ students</th></tr></thead><tbody>${L.html}</tbody></table></div>${L.more}</div>`;
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>School</th><th>Competition date</th><th class="n">Total students</th><th>${T}+ students</th></tr></thead><tbody>${L.html}</tbody></table></div>${L.more}</div>`;
       return h;
     }
 
@@ -582,37 +599,37 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     const rank = (gg) => [count(gg, (s) => s.met40) / gg.length, count(gg, (s) => s.comp) / gg.length, sum(gg.filter((s) => s.comp), "students")];
     const groups = groupBy(list, child).sort((a, b) => { const ra = rank(a[1]), rb = rank(b[1]); return ra[0] - rb[0] || ra[1] - rb[1] || ra[2] - rb[2] || a[0].localeCompare(b[0]); });
 
-    h += `<h2 class="section-title">Students who signed up, by ${lvl}</h2><p class="section-note">Lowest first. Tap a name to look inside it.</p>`;
-    const max = Math.max(1, ...groups.map(([, gg]) => sum(gg.filter((s) => s.comp), "students")));
-    const stOf = (gg) => sum(gg.filter((s) => s.comp), "students");
-    const bars = groups.slice().sort((a, b) => stOf(a[1]) - stOf(b[1]) || a[0].localeCompare(b[0])).map(([name, gg]) => { const v = stOf(gg);
-      return `<div class="hbar ${v ? "" : "zero"}" ${drillAttr(child, name, null, gg[0]).replace('class="click" ', "")} role="button" title="${esc(name)}: ${fmt(v)} students from ${count(gg, (s) => s.comp)} of ${gg.length} schools">` +
-        `<div class="name">${esc(name)}</div><div class="track"><div class="fill" style="width:${(v / max) * 100}%"></div></div><div class="num">${fmt(v)}</div></div>`; });
-    const LB = limitRows(listKey("bars"), bars);
-    h += `<div class="panel"><div class="hbars">${LB.html}</div>${LB.more}</div>`;
-
     h += `<h2 class="section-title">Comparison by ${lvl}</h2><p class="section-note">Each row is one ${lvl}, starting with the lowest share of schools that reached ${T} students. The % is the share of that ${lvl}'s schools.</p>`;
     const line = (label, gg, attrs, cls) => {
       const k = gg.length, gh = gg.filter((s) => s.comp);
       return `<tr ${attrs || ""} ${cls ? `class="${cls}"` : ""}><td class="first">${attrs ? `<span class="go">${esc(label)}</span>` : esc(label)}</td>` +
         `<td class="n" data-label="Schools">${fmt(k)}</td><td class="n" data-label="Held competition">${numPct(gh.length, k)}</td>` +
         `<td class="n" data-label="${T}+ students">${numPct(count(gg, (s) => s.met40), k)}</td>` +
-        `<td class="n" data-label="Students">${fmt(sum(gh, "students"))}</td></tr>`;
+        `<td class="n" data-label="Total students">${fmt(sum(gh, "students"))}</td></tr>`;
     };
     const rows = groups.map(([name, gg]) => line(name, gg, drillAttr(child, name, null, gg[0])));
     const L = limitRows(listKey("compare"), rows);
     h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>${LEVEL_NAME[child]}</th><th class="n">Schools</th>` +
       `<th class="n">Held competition<span class="th-sub">schools</span></th><th class="n">${T}+ students<span class="th-sub">schools that reached target</span></th>` +
-      `<th class="n">Students</th></tr></thead><tbody>${L.html}${line("Total", list, "", "total")}</tbody></table></div>${L.more}</div>`;
+      `<th class="n">Total students</th></tr></thead><tbody>${L.html}${line("Total", list, "", "total")}</tbody></table></div>${L.more}</div>`;
+
+    const sched = list.filter((s) => s.date).sort((a, b) => (dateKey(a.date) || "9999") .localeCompare(dateKey(b.date) || "9999") || a.school.localeCompare(b.school));
+    h += `<h2 class="section-title">Competition dates (${fmt(sched.length)} of ${fmt(n)} schools)</h2><p class="section-note">Schools that have set a date in the competition tracker, soonest first.</p>`;
+    if (!sched.length) h += `<div class="empty">No school here has set a competition date yet.</div>`;
+    else {
+      const rows3 = sched.map((s) => `<tr ${drillAttr("school", s.school, s)}><td data-label="District">${esc(s.district)}</td><td data-label="Sector">${esc(s.sector)}</td><td class="first2" data-label="School"><span class="go">${esc(s.school)}</span></td>${dateCell(s)}</tr>`);
+      const L3 = limitRows(listKey("dates"), rows3, S.SCHOOL_LIST_LIMIT);
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>District</th><th>Sector</th><th>School</th><th>Competition date</th></tr></thead><tbody>${L3.html}</tbody></table></div>${L3.more}</div>`;
+    }
 
     h += `<h2 class="section-title">Schools that held a competition (${fmt(held.length)})</h2><p class="section-note">Fewest students first.</p>`;
     if (!held.length) h += `<div class="empty">No school here has held a competition yet.</div>`;
     else {
       const rows2 = held.slice().sort((a, b) => a.students - b.students || a.school.localeCompare(b.school)).map((s) =>
         `<tr ${drillAttr("school", s.school, s)}><td data-label="District">${esc(s.district)}</td><td data-label="Sector">${esc(s.sector)}</td><td class="first2" data-label="School"><span class="go">${esc(s.school)}</span></td>` +
-        `<td class="n" data-label="Students">${fmt(s.students)}</td><td data-label="${T}+ students">${yes40(s)}</td></tr>`);
+        `<td class="n" data-label="Total students">${fmt(s.students)}</td><td data-label="${T}+ students">${yes40(s)}</td></tr>`);
       const L2 = limitRows(listKey("held"), rows2, S.SCHOOL_LIST_LIMIT);
-      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>District</th><th>Sector</th><th>School</th><th class="n">Students</th><th>${T}+ students</th></tr></thead><tbody>${L2.html}</tbody></table></div>${L2.more}</div>`;
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>District</th><th>Sector</th><th>School</th><th class="n">Total students</th><th>${T}+ students</th></tr></thead><tbody>${L2.html}</tbody></table></div>${L2.more}</div>`;
     }
     return h;
   }
@@ -710,7 +727,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       const records = [];
       districts.forEach((d) => (d.rows || []).forEach((r) => records.push({
         province: d.province, district: d.district, sector: r[0], school: r[1], comp: r[2], s5: r[3], s6: r[4], students: r[5],
-        downloaded: r[6], dos: r[7], tTotal: r[8], tAll: r[9], tSome: r[10], tNone: r[11]
+        downloaded: r[6], dos: r[7], tTotal: r[8], tAll: r[9], tSome: r[10], tNone: r[11], date: r[12] || "", planned: r[13] || ""
       })));
       if (!records.length) {
         $("updated").textContent = "No data yet";
@@ -742,7 +759,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         records.forEach((s) => {
           const key = s.province + "|" + s.district;
           if (!byDistrict.has(key)) byDistrict.set(key, { province: s.province, district: s.district, rows: [] });
-          byDistrict.get(key).rows.push([s.sector, s.school, s.comp, s.s5, s.s6, s.students, s.downloaded, s.dos, s.tTotal, s.tAll, s.tSome, s.tNone]);
+          byDistrict.get(key).rows.push([s.sector, s.school, s.comp, s.s5, s.s6, s.students, s.downloaded, s.dos, s.tTotal, s.tAll, s.tSome, s.tNone, s.date, s.planned]);
         });
         const idOf = (k) => k.replace(/[^A-Za-z0-9_.~:@+-]/g, "_").slice(0, 120);
         const keep = new Set();
