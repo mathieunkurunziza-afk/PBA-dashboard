@@ -103,18 +103,18 @@ West,Ngororero,Kabaya,GS KINANIRA,0,0,0,0,Yes,,,,,0,2026-11-10
 West,Ngororero,Kageyo,GS KAMASHI,0,0,0,0,Yes,,,,,0,2026-11-11
 West,Ngororero,Kageyo,GS MUKORE,0,0,0,0,Yes,,,,,0,2026-11-11
 West,Ngororero,Kageyo,COL AMIZERO,0,0,0,0,Yes,,,,,0,2026-11-06
-West,Ngororero,Kavumu,GS KAVUMU A,0,0,0,0,Yes,,,,,0,
-West,Ngororero,Matyazo,GS MUNINI,0,0,0,0,Yes,,,,,0,
-West,Ngororero,Matyazo,C.I.C. MURAMBA,0,0,0,0,Yes,,,,,0,
+West,Ngororero,Kavumu,GS KAVUMU A,0,0,0,0,Yes,,,,,0,2026-10-28
+West,Ngororero,Matyazo,GS MUNINI,0,0,0,0,Yes,,,,,0,2026-11-10
+West,Ngororero,Matyazo,C.I.C. MURAMBA,0,0,0,0,Yes,,,,,0,2026-11-04
 West,Ngororero,Muhanda,RWILI,0,0,0,0,Yes,Yes,6,6,,0,2026-10-27
 West,Ngororero,Muhororo,KANOGO,0,0,0,0,Yes,,,,,0,2026-11-04
 West,Ngororero,Ngororero,GS RUHUNGA C,0,0,0,0,Yes,,,,,0,
 West,Ngororero,Ngororero,ASPADE,0,0,0,0,Yes,,,,,0,
 West,Ngororero,Ngororero,GS MPARA,0,0,0,0,Yes,,,,,0,
-West,Ngororero,Nyange,E.S NYANGE,0,0,0,0,Yes,,,,,0,
-West,Ngororero,Nyange,NYANGE A,0,0,0,0,Yes,,,,,0,
-West,Ngororero,Nyange,GS KIGALI,0,0,0,0,Yes,,,,,0,
-West,Ngororero,Sovu,G.S MAHEMBE,0,0,0,0,Yes,,,,,0,22/10/2026
+West,Ngororero,Nyange,E.S NYANGE,0,0,0,0,Yes,,,,,0,2026-11-09
+West,Ngororero,Nyange,NYANGE A,0,0,0,0,Yes,,,,,0,2026-11-09
+West,Ngororero,Nyange,GS KIGALI,0,0,0,0,Yes,,,,,0,2026-11-11
+West,Ngororero,Sovu,G.S MAHEMBE,0,0,0,0,Yes,,,,,0,2026-10-22
 West,Rubavu,Bugeshi,G.S BURINGO,0,0,0,0,Yes,,,,,0,
 West,Rubavu,Bugeshi,G.S BIHE / TSS,0,0,0,0,Yes,,,,,0,
 West,Rubavu,Busasamana,G.S BUSASAMANA II / TSS,0,0,0,0,Yes,,,,,0,
@@ -312,7 +312,7 @@ North,Gakenke,Janja,GS RUTAKE,0,0,0,0,Yes,,,,,0,
 North,Gakenke,Kamubuga,GS KAMUBUGA,0,0,0,0,Yes,,,,,0,
 North,Gakenke,Kamubuga,Gs Murambo,0,0,0,0,Yes,,,,,0,
 North,Gakenke,Karambo,GS KIREBE,0,0,0,0,Yes,Yes,4,4,,0,
-North,Gakenke,Kivuruga,ES BUHUGA,0,0,0,0,Yes,,,,,0,
+North,Gakenke,Kivuruga,ES BUHUGA,0,0,0,0,Yes,Yes,3,3,,0,
 North,Gakenke,Kivuruga,GS KAGEYO,0,0,0,0,Yes,Yes,5,5,,0,
 North,Gakenke,Mataba,GS MATABA,0,0,0,0,Yes,,,,,0,
 North,Gakenke,Minazi,GS MUNYANA / TSS,0,0,0,0,Yes,Yes,3,3,,0,
@@ -406,7 +406,7 @@ West,Karongi,Bwishyura,GS Nyegabo,0,0,0,0,Yes,,,,,0,
 West,Karongi,Bwishyura,GS RURAGWE,0,0,0,0,Yes,,,,,0,
 West,Karongi,Bwishyura,COLLEGE STE MARIE KIBUYE,0,0,0,0,Yes,,,,,0,
 West,Karongi,Gashari,GS MWENDO,0,0,0,0,Yes,,,,,0,
-West,Karongi,Gashari,ES URUMURI,1,20,20,40,Yes,,,,,0,
+West,Karongi,Gashari,ES URUMURI,1,20,20,40,Yes,Yes,4,4,,0,
 West,Karongi,Gashari,GS Nyabikenke B,0,0,0,0,No,,,,,0,
 West,Karongi,Gashari,GS SHOBA-MURAMBA,0,0,0,0,Yes,,,,,0,
 West,Karongi,Gashari,GS SAINT JOSEPH BIRAMBO,0,0,0,0,Yes,,,,,0,
@@ -422,7 +422,7 @@ West,Karongi,Mubuga,GS MARA,0,0,0,0,Yes,,,,,0,
 West,Karongi,Mubuga,ES MUBUGA,0,0,0,0,Yes,,,,,0,
 West,Karongi,Mubuga,GS ST MICHEL DE MUBUGA,0,0,0,0,Yes,,,,,0,
 West,Karongi,Mubuga,GS MWEYA,0,0,0,0,Yes,,,,,0,
-West,Karongi,Mubuga,GS CYINAMA / TSS,0,0,0,0,Yes,,,,,0,
+West,Karongi,Mubuga,GS CYINAMA / TSS,0,0,0,0,Yes,Yes,1,1,,0,
 West,Karongi,Murambi,GS MUHORORO,0,0,0,0,Yes,,,,,0,
 West,Karongi,Murambi,GS KIRINDA,0,0,0,0,Yes,,,,,0,
 West,Karongi,Murambi,ES KIRINDA,0,0,0,0,Yes,,,,,0,
@@ -432,9 +432,9 @@ West,Karongi,Murundi,ES MUNZANGA,0,0,0,0,Yes,,,,,0,
 West,Karongi,Murundi,GS NGOMA,0,0,0,0,Yes,,,,,0,
 West,Karongi,Murundi,GS WITONGO,0,0,0,0,Yes,,,,,0,
 West,Karongi,Mutuntu,GS MANJI,0,0,0,0,Yes,,,,,0,
-West,Karongi,Mutuntu,ES MUKUNGU,0,0,0,0,Yes,,,,,0,
-West,Karongi,Mutuntu,ES GASENYI,0,0,0,0,Yes,,,,,0,
-West,Karongi,Mutuntu,GS GISAYURA,0,0,0,0,Yes,,,,,0,
+West,Karongi,Mutuntu,ES MUKUNGU,0,0,0,0,Yes,,,,,0,2026-11-11
+West,Karongi,Mutuntu,ES GASENYI,0,0,0,0,Yes,,,,,0,2026-06-11
+West,Karongi,Mutuntu,GS GISAYURA,0,0,0,0,Yes,,,,,0,2026-12-11
 West,Karongi,Rubengera,GS BUBAZI,0,0,0,0,Yes,,,,,0,
 West,Karongi,Rubengera,GS NYARUBUYE,0,0,0,0,Yes,,,,,0,
 West,Karongi,Rubengera,GS KIBIRIZI,0,0,0,0,Yes,,,,,0,
