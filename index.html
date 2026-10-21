@@ -23,7 +23,7 @@ const SETTINGS = {
 
   // Claude mode: the Google Sheet the owner loads data from
   SHEET_ID: "17X6-nkTtPTP4xxoxCXnYhMW0YxbA8pXnXECMzw-Cag0",
-  SHEET_RANGE: "'Dashboard feed'!A1:O3000",
+  SHEET_RANGE: "'Dashboard feed'!A1:P3000",
 
   TITLE: "PBA School Dashboard",
   SUBTITLE: "Academic Year 2026–2027",
@@ -37,6 +37,17 @@ const SETTINGS = {
   TARGET_STUDENTS: 40, // at least 40 students
   TARGET_EACH: 20,     // 20 in S5 and 20 in S6
 
+  // Weekly competition chart: first and last week shown (Monday to Sunday)
+  CHART_FROM: "2026-10-19",
+  CHART_TO: "2026-11-22",
+
+  // Targets for the Project Assignment scorecards (%)
+  TARGET_DOWNLOADED: 99,
+  TARGET_DOS: 90,
+  TARGET_ASSIGNED: 90,
+  // Bar colour: Green when the target is reached, Yellow when within this many points of it, Red below that
+  YELLOW_MARGIN: 10,
+
   LIST_LIMIT: 10,        // district / sector lists show this many rows first, then "Show all"
   SCHOOL_LIST_LIMIT: 11, // school lists show this many rows first
   AUTO_REFRESH_MINUTES: 10 // CSV mode: reload data while the page is open (0 = never)
@@ -44,47 +55,50 @@ const SETTINGS = {
 </script>
 <style>
 :root {
+  /* Educate! brand palette (WikE! colour palette).
+     Primary colours for headings and text; "Variation for Graphics" for bars, charts and icons. */
   color-scheme: light;
-  --page: #f3f4f1;
+  --page: #f4f5f3;
   --surface: #ffffff;
-  --surface-2: #f6f7f4;
-  --line: #e2e3dd;
-  --ink: #101211;
-  --ink-2: #4f524c;
-  --ink-3: #7b7e76;
-  --brand: #1c5cab;
-  --brand-soft: #e7eff9;
-  --bar: #2a78d6;
-  --good: #0ca30c;
-  --good-ink: #006300;
-  --good-soft: #e6f5e6;
-  --warn: #fab219;
-  --warn-ink: #855600;
-  --warn-soft: #fff4dc;
-  --bad: #d03b3b;
-  --bad-ink: #a52a2a;
-  --bad-soft: #fbe9e9;
-  --none: #c9cac3;
-  --shadow: 0 1px 2px rgba(16,18,17,.05), 0 2px 8px rgba(16,18,17,.04);
+  --surface-2: #f5f6f4;
+  --line: #e0e2df;
+  --ink: #0e313e;          /* E! Navy */
+  --ink-2: #4d5a5f;
+  --ink-3: #7d7b7c;        /* E! Grey (graphics) */
+  --brand: #0f6a8c;        /* E! Blue */
+  --brand-soft: #e6f0f4;
+  --bar: #4d889d;          /* E! Blue (graphics) */
+  --plan: #7d7b7c;         /* E! Grey (graphics) */
+  --good: #4f9262;         /* E! Green (graphics) */
+  --good-ink: #008148;     /* E! Green */
+  --good-soft: #e8f2eb;
+  --warn: #f4b14d;         /* E! Yellow (graphics) */
+  --warn-ink: #8a5600;     /* darker yellow so text stays readable */
+  --warn-soft: #fdf3e2;
+  --bad: #a03434;          /* E! Red (graphics) */
+  --bad-ink: #870101;      /* E! Red */
+  --bad-soft: #f8e9e9;
+  --none: #c9c8c6;
+  --shadow: 0 1px 2px rgba(14,49,62,.05), 0 2px 8px rgba(14,49,62,.05);
   --radius: 14px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --page: #0e0f0e; --surface: #1a1b1a; --surface-2: #232422; --line: #353733;
-    --ink: #f0f0ec; --ink-2: #c3c4bb; --ink-3: #8f9189;
-    --brand: #86b6ef; --brand-soft: #1d2a3b; --bar: #3987e5;
-    --good-ink: #63d063; --good-soft: #15291a; --warn-ink: #fab219; --warn-soft: #2f2610;
-    --bad-ink: #f08a8a; --bad-soft: #321818; --none: #4b4d47; --shadow: none;
+    --page: #0b1619; --surface: #12232a; --surface-2: #19303a; --line: #2a434d;
+    --ink: #eef3f4; --ink-2: #b9c7cc; --ink-3: #8c9a9f;
+    --brand: #7fc0d8; --brand-soft: #173742; --bar: #5f9db2; --plan: #a9a7a8;
+    --good-ink: #7cc391; --good-soft: #15291d; --warn-ink: #f4b14d; --warn-soft: #2f2610;
+    --bad-ink: #e59a9a; --bad-soft: #321818; --none: #4b5558; --shadow: none;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page: #0e0f0e; --surface: #1a1b1a; --surface-2: #232422; --line: #353733;
-  --ink: #f0f0ec; --ink-2: #c3c4bb; --ink-3: #8f9189;
-  --brand: #86b6ef; --brand-soft: #1d2a3b; --bar: #3987e5;
-  --good-ink: #63d063; --good-soft: #15291a; --warn-ink: #fab219; --warn-soft: #2f2610;
-  --bad-ink: #f08a8a; --bad-soft: #321818; --none: #4b4d47; --shadow: none;
+  --page: #0b1619; --surface: #12232a; --surface-2: #19303a; --line: #2a434d;
+  --ink: #eef3f4; --ink-2: #b9c7cc; --ink-3: #8c9a9f;
+  --brand: #7fc0d8; --brand-soft: #173742; --bar: #5f9db2; --plan: #a9a7a8;
+  --good-ink: #7cc391; --good-soft: #15291d; --warn-ink: #f4b14d; --warn-soft: #2f2610;
+  --bad-ink: #e59a9a; --bad-soft: #321818; --none: #4b5558; --shadow: none;
 }
 
 * { box-sizing: border-box; }
@@ -137,6 +151,12 @@ button.reset { cursor: pointer; font-weight: 600; color: var(--brand); width: au
 .kpi.target { border-color: var(--brand); }
 .meter { height: 8px; background: var(--surface-2); border-radius: 4px; margin-top: 10px; overflow: hidden; border: 1px solid var(--line); }
 .meter span { display: block; height: 100%; background: var(--bar); border-radius: 0 4px 4px 0; }
+.meter { position: relative; overflow: visible; }
+.meter span.good { background: var(--good); } .meter span.warn { background: var(--warn); } .meter span.bad { background: var(--bad); }
+.meter .goal { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); border-radius: 1px; }
+.kpi .target-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; white-space: nowrap; font-size: 12px; color: var(--ink-3); margin-top: 6px; }
+.kpi .target-row b { font-weight: 600; }
+.kpi .target-row .good { color: var(--good-ink); } .kpi .target-row .warn { color: var(--warn-ink); } .kpi .target-row .bad { color: var(--bad-ink); }
 
 /* status cards */
 .status-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
@@ -159,6 +179,20 @@ button.reset { cursor: pointer; font-weight: 600; color: var(--brand); width: au
 .tbar .seg .t-num { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .tbar .seg .t-num small { font-size: 13px; font-weight: 600; color: var(--ink-2); margin-left: 3px; }
 
+/* weekly competition chart */
+.trend svg { display: block; width: 100%; height: auto; overflow: visible; }
+.trend .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); margin-bottom: 8px; }
+.trend .legend span { display: inline-flex; align-items: center; gap: 6px; }
+.trend .legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
+.trend .legend i.plan { border-color: var(--plan); border-top-style: dashed; }
+.trend .legend i.done { border-color: var(--bar); }
+.trend .wk { cursor: default; }
+.trend .wk:hover .hit, .trend .wk:focus .hit { fill: var(--brand-soft); }
+.trend .note { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--warn-soft); font-size: 14px; color: var(--ink); }
+.trend .note b { font-variant-numeric: tabular-nums; }
+.trend .tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--surface); font-size: 12px; line-height: 1.4; padding: 6px 9px; border-radius: 8px; white-space: nowrap; transform: translate(-50%, -100%); margin-top: -8px; }
+.trend { position: relative; }
+
 /* horizontal bars */
 .hbars { display: grid; gap: 10px; }
 .hbar { display: grid; grid-template-columns: minmax(110px, 220px) minmax(0, 1fr) 64px; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; border-radius: 6px; }
@@ -176,7 +210,7 @@ table.data { width: 100%; border-collapse: collapse; font-size: 14px; }
 table.data th { text-align: left; font-size: 12px; letter-spacing: .02em; color: var(--ink-2); font-weight: 600; padding: 10px; border-bottom: 2px solid var(--line); vertical-align: bottom; line-height: 1.3; }
 table.data th .th-sub { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; }
 table.data td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: middle; font-variant-numeric: tabular-nums; }
-table.data th.n, table.data td.n { text-align: right; }
+table.data th.n, table.data td.n { text-align: center; }
 table.data tr.total td { font-weight: 700; border-top: 2px solid var(--line); background: var(--surface-2); }
 table.data tbody tr.click { cursor: pointer; }
 table.data tbody tr.click:hover td { background: var(--brand-soft); }
@@ -322,7 +356,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     tSome: ["school pba teachers assigned in some of classes", "school pba teachers assigned in some classes"],
     tNone: ["school pba teachers did not assigned", "school pba teachers did not assign"],
     date: ["competition date", "date of competition"],
-    planned: ["planned competition date"]
+    actual: ["actual competition date"]
   };
 
   // rows (first row = headers) -> compact records (no school code kept)
@@ -349,7 +383,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         downloaded: isYes(get(r, "downloaded")) ? 1 : 0,
         dos: isYes(get(r, "dos")) ? 1 : 0,
         tTotal: num(r, "tTotal") || 0, tAll: num(r, "tAll") || 0, tSome: num(r, "tSome") || 0, tNone: num(r, "tNone") || 0,
-        date: get(r, "date"), planned: get(r, "planned")
+        date: get(r, "date"), actual: get(r, "actual")
       });
     }
     return out;
@@ -398,6 +432,15 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
   const count = (list, f) => list.reduce((a, s) => a + (f(s) ? 1 : 0), 0);
   const assignedOf = (s) => s.tAll + (S.COUNT_SOME_AS_ASSIGNED ? s.tSome : 0);
 
+  // scorecard with a target: coloured bar, a mark at the target, and "Target 95% · ✓ Reached"
+  function kpiTarget(label, value, extra, hint, p, target) {
+    const st = p >= target ? "good" : p >= target - S.YELLOW_MARGIN ? "warn" : "bad";
+    const word = { good: "✓ Reached", warn: `! ${target - p} points short`, bad: `✕ ${target - p} points short` }[st];
+    return `<div class="kpi"><div class="label">${label}</div><div class="value">${value}${extra ? `<small>${extra}</small>` : ""}</div>` +
+      (hint ? `<div class="hint">${hint}</div>` : "") +
+      `<div class="meter" role="img" aria-label="${p}% against a target of ${target}%"><span class="${st}" style="width:${p}%"></span><i class="goal" style="left:calc(${target}% - 1px)"></i></div>` +
+      `<div class="target-row"><span>Target <b>${target}%</b></span><span class="${st}">${word}</span></div></div>`;
+  }
   function kpi(label, value, extra, hint, meterPct, cls) {
     return `<div class="kpi ${cls || ""}"><div class="label">${label}</div><div class="value">${value}${extra ? `<small>${extra}</small>` : ""}</div>` +
       (hint ? `<div class="hint">${hint}</div>` : "") +
@@ -483,9 +526,10 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
 
     let h = `<div class="kpis">` +
       kpi("Schools", fmt(n), "", "Active PBA schools") +
-      kpi("Downloaded projects", fmt(dl), `${pct(dl, n)}%`, `${fmt(n - dl)} not yet done`, pct(dl, n)) +
-      kpi("DOS survey on time", fmt(dos), `${pct(dos, n)}%`, `${fmt(n - dos)} not yet`, pct(dos, n)) +
-      kpi("PBA teachers who assigned projects", fmt(assigned), tT ? `${pct(assigned, tT)}%` : "", tT ? `of ${fmt(tT)} PBA teachers` : "Not yet reported", tT ? pct(assigned, tT) : undefined) +
+      kpiTarget("Schools that downloaded projects", fmt(dl), `${pct(dl, n)}%`, `${fmt(n - dl)} not yet done`, pct(dl, n), S.TARGET_DOWNLOADED) +
+      kpiTarget("Schools that submitted the DOS survey on time", fmt(dos), `${pct(dos, n)}%`, `${fmt(n - dos)} not yet`, pct(dos, n), S.TARGET_DOS) +
+      (tT ? kpiTarget("PBA teachers who assigned projects", fmt(assigned), `${pct(assigned, tT)}%`, `of ${fmt(tT)} PBA teachers in schools that submitted the DOS survey`, pct(assigned, tT), S.TARGET_ASSIGNED)
+          : kpi("PBA teachers who assigned projects", "–", "", "Not yet reported: comes from the DOS survey")) +
       `</div>`;
 
     h += `<h2 class="section-title">School status</h2><p class="section-note">Each school gets a colour from the share of its PBA teachers who assigned projects.</p>`;
@@ -513,7 +557,6 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         const k = gg.length, tt = sum(gg, "tTotal"), as = gg.reduce((a, s) => a + assignedOf(s), 0);
         return `<tr ${attrs || ""} ${cls ? `class="${cls}"` : ""}><td class="first">${attrs ? `<span class="go">${esc(label)}</span>` : esc(label)}</td>` +
           `<td class="n" data-label="Schools">${fmt(k)}</td>` +
-          `<td class="n full" data-label="Teachers who assigned">${tt ? `${fmt(as)} of ${fmt(tt)}<span class="pct">${pct(as, tt)}%</span>` : "–"}</td>` +
           `<td class="n" data-label="Downloaded projects">${numPct(count(gg, (s) => s.downloaded), k)}</td>` +
           `<td class="n" data-label="DOS survey on time">${numPct(count(gg, (s) => s.dos), k)}</td>` +
           `<td class="wide" data-label="School status">${statusCounts(count(gg, (s) => s.status === "good"), count(gg, (s) => s.status === "warn"), count(gg, (s) => s.status === "bad"))}</td></tr>`;
@@ -524,7 +567,6 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       const L = limitRows(listKey("compare"), rows);
       h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr>` +
         `<th>${LEVEL_NAME[child]}</th><th class="n">Schools</th>` +
-        `<th class="n">Teachers who assigned<span class="th-sub">PBA teachers, all or some classes</span></th>` +
         `<th class="n">Downloaded projects<span class="th-sub">schools that downloaded</span></th>` +
         `<th class="n">DOS survey on time<span class="th-sub">schools that submitted</span></th>` +
         `<th>School status<span class="th-sub">number of schools by colour</span></th>` +
@@ -555,6 +597,73 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     return `<div class="kpi ${cls || ""}"><div class="label">${label}</div><div class="value">${num}${of ? `<small>of ${of}</small>` : ""}${p !== undefined ? `<span class="bigpct">${p}%</span>` : ""}</div>` +
       (p !== undefined ? `<div class="meter" role="img" aria-label="${p}%"><span style="width:${p}%"></span></div>` : "") + `</div>`;
   }
+  // ---------- weekly chart: competitions planned vs held, per week ----------
+  const ymd = (d) => d.toISOString().slice(0, 10);
+  function weeksBetween(from, to) {
+    const out = []; let d = new Date(from + "T00:00:00Z"); const end = new Date(to + "T00:00:00Z");
+    while (d <= end) { const e = new Date(d); e.setUTCDate(e.getUTCDate() + 6); out.push({ start: ymd(d), end: ymd(e) }); d.setUTCDate(d.getUTCDate() + 7); }
+    return out;
+  }
+  const shortDay = (iso) => `${+iso.slice(8)} ${MONTHS[+iso.slice(5, 7) - 1]}`;
+  function weeklyChart(list) {
+    const weeks = weeksBetween(S.CHART_FROM, S.CHART_TO);
+    const inWeek = (d, w) => { const k = dateKey(d); return k && k >= w.start && k <= w.end; };
+    weeks.forEach((w) => { w.plan = count(list, (s) => inWeek(s.date, w)); w.done = count(list, (s) => inWeek(s.actual, w)); });
+    const today = ymd(new Date());
+    const W = Math.max(300, Math.min(1060, ($("main").clientWidth || 1000) - 34)), H = 230;
+    const narrow = W < 560;
+    const L = 30, R = 6, T = 18, B = narrow ? 70 : 58, iw = W - L - R, ih = H - T - B;
+    const max = Math.max(4, ...weeks.map((w) => Math.max(w.plan, w.done)));
+    const step = Math.ceil(max / 4), top = step * 4;
+    const colW = iw / weeks.length;
+    const x = (i) => L + colW * (i + 0.5); // each week sits in the middle of its own column
+    const y = (v) => T + ih - (v / top) * ih;
+    const line = (k) => weeks.map((w, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(w[k]).toFixed(1)}`).join(" ");
+    let g = "";
+    for (let v = 0; v <= top; v += step) g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${v}</text>`;
+    let cols = "";
+    weeks.forEach((w, i) => {
+      const now = today >= w.start && today <= w.end;
+      const cx = x(i);
+      cols += `<g class="wk" tabindex="0" data-tip="${shortDay(w.start)} – ${shortDay(w.end)}|Planned: ${w.plan}|Held: ${w.done}" data-x="${cx}" data-y="${y(Math.max(w.plan, w.done))}">` +
+        `<rect class="hit" x="${cx - colW / 2}" y="${T}" width="${colW}" height="${ih}" fill="transparent"/>` +
+        (now ? `<line x1="${cx}" x2="${cx}" y1="${T}" y2="${T + ih}" stroke="var(--brand)" stroke-width="1" stroke-dasharray="3 3"/>` : "") +
+        (narrow
+          ? `<text x="${cx}" y="${H - B + 16}" text-anchor="middle" font-size="11" font-weight="${now ? 700 : 600}" fill="var(--ink)">${shortDay(w.start)}</text>` +
+            `<text x="${cx}" y="${H - B + 31}" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">Plan ${w.plan}</text>` +
+            `<text x="${cx}" y="${H - B + 45}" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">Held ${w.done}</text>` +
+            (now ? `<text x="${cx}" y="${H - B + 60}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--brand)">This week</text>` : "")
+          : `<text x="${cx}" y="${H - B + 18}" text-anchor="middle" font-size="11.5" font-weight="${now ? 700 : 500}" fill="var(--ink)">${shortDay(w.start)} – ${shortDay(w.end)}</text>` +
+            `<text x="${cx}" y="${H - B + 34}" text-anchor="middle" font-size="11" fill="var(--ink-2)">Plan ${w.plan} · Held ${w.done}</text>` +
+            (now ? `<text x="${cx}" y="${H - B + 49}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--brand)">This week</text>` : "")) +
+        `</g>`;
+    });
+    const dots = (k, color) => weeks.map((w, i) => `<circle cx="${x(i)}" cy="${y(w[k])}" r="4.5" fill="${color}" stroke="var(--surface)" stroke-width="2"/>`).join("");
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Competitions planned and held per week">${g}${cols}` +
+      `<path d="${line("plan")}" fill="none" stroke="var(--plan)" stroke-width="2" stroke-dasharray="6 5"/>` +
+      `<path d="${line("done")}" fill="none" stroke="var(--bar)" stroke-width="2.5"/>` +
+      dots("plan", "var(--plan)") + dots("done", "var(--bar)") + `</svg>`;
+    const noDate = count(list, (s) => !s.date);
+    const outside = count(list, (s) => s.date && !weeks.some((w) => inWeek(s.date, w)));
+    return `<div class="panel trend" id="trend"><div class="legend"><span><i class="plan"></i>Planned (competition date set)</span><span><i class="done"></i>Held (competition done)</span></div>${svg}` +
+      `<div class="note"><b>${fmt(noDate)}</b> of ${fmt(list.length)} schools have no competition date yet.` +
+      (outside ? ` ${fmt(outside)} more have a date outside these weeks.` : "") + `</div></div>`;
+  }
+  // tooltip for the weekly chart (hover on computer, tap on phone)
+  function trendTip(e) {
+    const g = e.target.closest && e.target.closest(".wk"), box = $("trend");
+    if (!box) return;
+    let tip = box.querySelector(".tip");
+    if (!g) { if (tip) tip.remove(); return; }
+    if (!tip) { tip = document.createElement("div"); tip.className = "tip"; box.appendChild(tip); }
+    const [t1, t2, t3] = g.dataset.tip.split("|");
+    tip.innerHTML = `<b>${t1}</b><br>${t2}<br>${t3}`;
+    const svg = box.querySelector("svg"), r = svg.getBoundingClientRect(), br = box.getBoundingClientRect();
+    const k = r.width / svg.viewBox.baseVal.width;
+    tip.style.left = (r.left - br.left + g.dataset.x * k) + "px";
+    tip.style.top = (r.top - br.top + g.dataset.y * k) + "px";
+  }
+
   function renderCompetition() {
     const list = filtered(), n = list.length;
     const held = list.filter((s) => s.comp);
@@ -580,6 +689,8 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       bigKpi("Total students", fmt(st)) +
       `</div>`;
     const dateCell = (s) => `<td data-label="Competition date">${dateText(s)}</td>`;
+    // weekly chart only above sector level (a sector has too few schools for a trend)
+    if (!state.sector) h += `<h2 class="section-title">Competitions per week</h2><p class="section-note">Number of schools planning their competition each week (dashed line), against the number that have held it (solid line). Weeks run Monday to Sunday.</p>` + weeklyChart(list);
 
     const child = childLevel();
     const lvl = LEVEL_NAME[child].toLowerCase();
@@ -665,6 +776,10 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     if (m) { const k = m.dataset.more; expanded.has(k) ? expanded.delete(k) : expanded.add(k); render(); return; }
     const el = e.target.closest("[data-level]"); if (el) drill(el);
   });
+  $("main").addEventListener("mouseover", trendTip);
+  $("main").addEventListener("mouseleave", trendTip);
+  $("main").addEventListener("focusin", trendTip);
+  let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (state.page === "competition" && ALL.length) render(); }, 200); });
   $("main").addEventListener("keydown", (e) => { if (e.key === "Enter") { const el = e.target.closest("[data-level]"); if (el) drill(el); } });
   LEVELS.forEach((l, i) => $("f-" + l).addEventListener("change", (e) => { state[l] = e.target.value; LEVELS.slice(i + 1).forEach((x) => (state[x] = "")); render(); }));
   $("reset").addEventListener("click", () => { LEVELS.forEach((l) => (state[l] = "")); render(); });
@@ -727,7 +842,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       const records = [];
       districts.forEach((d) => (d.rows || []).forEach((r) => records.push({
         province: d.province, district: d.district, sector: r[0], school: r[1], comp: r[2], s5: r[3], s6: r[4], students: r[5],
-        downloaded: r[6], dos: r[7], tTotal: r[8], tAll: r[9], tSome: r[10], tNone: r[11], date: r[12] || "", planned: r[13] || ""
+        downloaded: r[6], dos: r[7], tTotal: r[8], tAll: r[9], tSome: r[10], tNone: r[11], date: r[12] || "", actual: r[13] || ""
       })));
       if (!records.length) {
         $("updated").textContent = "No data yet";
@@ -759,7 +874,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         records.forEach((s) => {
           const key = s.province + "|" + s.district;
           if (!byDistrict.has(key)) byDistrict.set(key, { province: s.province, district: s.district, rows: [] });
-          byDistrict.get(key).rows.push([s.sector, s.school, s.comp, s.s5, s.s6, s.students, s.downloaded, s.dos, s.tTotal, s.tAll, s.tSome, s.tNone, s.date, s.planned]);
+          byDistrict.get(key).rows.push([s.sector, s.school, s.comp, s.s5, s.s6, s.students, s.downloaded, s.dos, s.tTotal, s.tAll, s.tSome, s.tNone, s.date, s.actual]);
         });
         const idOf = (k) => k.replace(/[^A-Za-z0-9_.~:@+-]/g, "_").slice(0, 120);
         const keep = new Set();
