@@ -207,7 +207,7 @@ East,Gatsibo,Remera,GS Humure,1,16,20,36,Yes,Yes,2,2,,0,,,Yes
 East,Gatsibo,Rugarama,G.S NYAGASIGA,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 East,Gatsibo,Rugarama,G.S Rugarama,0,0,0,0,Yes,Yes,6,6,,0,,,Yes
 East,Gatsibo,Rugarama,GS Bright Vision,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
-East,Gatsibo,Rwimbogo,G.S RWIKINIRO,0,0,0,0,Yes,Yes,3,3,,0,2026-10-30,,Yes
+East,Gatsibo,Rwimbogo,G.S RWIKINIRO,1,20,20,40,Yes,Yes,3,3,,0,2026-10-30,,Yes
 East,Kirehe,Gahara,GS GAHARA / TSS,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 East,Kirehe,Gahara,GS MUGOGO,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 East,Kirehe,Gahara,GS MUHERO,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
@@ -305,7 +305,7 @@ North,Gakenke,Gakenke,GS KARUGANDA,0,0,0,0,Yes,,,,,0,,,Yes
 North,Gakenke,Gakenke,ES KARUGANDA,0,0,0,0,Yes,Yes,5,5,,0,,,Yes
 North,Gakenke,Gakenke,GS RUKURA,0,0,0,0,Yes,Yes,6,6,,0,,,Yes
 North,Gakenke,Gashenyi,ES NYACYINA,1,6,6,12,Yes,Yes,3,3,,0,,,Yes
-North,Gakenke,Gashenyi,CMUR,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
+North,Gakenke,Gashenyi,CMUR,1,18,21,39,Yes,Yes,1,1,,0,,,Yes
 North,Gakenke,Janja,GSNDG JANJA,0,0,0,0,Yes,Yes,4,2,2,0,,,Yes
 North,Gakenke,Janja,LYCEE SAINT JEROME JANJA,0,0,0,0,Yes,Yes,11,11,,0,,,Yes
 North,Gakenke,Janja,GS RUTAKE,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
@@ -398,7 +398,7 @@ North,Rulindo,Rusiga,INYANGE GIRLS SCHOOL,1,8,6,14,Yes,Yes,3,3,,0,,,Yes
 North,Rulindo,Shyorongi,GS SHYORONGI,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
 North,Rulindo,Shyorongi,GS KIJABAGWE,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 North,Rulindo,Shyorongi,ES STELLA MATUTINA,0,0,0,0,Yes,Yes,7,7,,0,,,Yes
-North,Rulindo,Tumba,GS NYIRABIRORI,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
+North,Rulindo,Tumba,GS NYIRABIRORI,1,20,18,38,Yes,Yes,2,2,,0,,,Yes
 West,Karongi,Bwishyura,ES BWISHYURA,0,0,0,0,Yes,Yes,3,1,1,1,,,Yes
 West,Karongi,Bwishyura,GS KIBUYE,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 West,Karongi,Bwishyura,GS NYABIKENKE,0,0,0,0,,,,,,0,,,
