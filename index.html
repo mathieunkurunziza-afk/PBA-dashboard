@@ -18,7 +18,7 @@ const SETTINGS = {
 
   // CSV mode (GitHub). LIVE: paste the Google Sheet "Publish to web" CSV link between the quotes.
   // The dashboard reads it every time it opens. If it can't, it uses the BACKUP copy kept in GitHub.
-  LIVE_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ54fID9-FCJQCrraMuzvQYb1D5C9jBMbQmUmCXzHnOBHfMmGKSshE3sEv4sNGQFAlNGH_Rq4b8vkj/pub?gid=845386428LIVE_CSV_URL: ""single=trueLIVE_CSV_URL: ""output=csv",
+  LIVE_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ54fID9-FCJQCrraMuzvQYb1D5C9jBMbQmUmCXzHnOBHfMmGKSshE3sEv4sNGQFAlNGH_Rq4b8vkj/pub?gid=845386428&single=true&output=csv",
   BACKUP_URL: "data/active_schools.csv",
 
   // Claude mode: the Google Sheet the owner loads data from
@@ -645,7 +645,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
 
     const W = Math.max(300, Math.min(1060, ($("main").clientWidth || 1000) - 34)), H = 260;
     const narrow = W < 560;
-    const L = 34, R = 54, T = 22, B = narrow ? 64 : 52, iw = W - L - R, ih = H - T - B;
+    const L = 46, R = 54, T = 22, B = narrow ? 64 : 52, iw = W - L - R, ih = H - T - B;
     const max = Math.max(4, ...weeks.map((w) => w.total));
     const step = Math.ceil(max / 4 / (max > 40 ? 10 : 1)) * (max > 40 ? 10 : 1), top = step * 4;
     const colW = iw / weeks.length, bw = Math.min(90, colW * 0.56);
