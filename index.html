@@ -18,12 +18,12 @@ const SETTINGS = {
 
   // CSV mode (GitHub). LIVE: paste the Google Sheet "Publish to web" CSV link between the quotes.
   // The dashboard reads it every time it opens. If it can't, it uses the BACKUP copy kept in GitHub.
-  LIVE_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ54fID9-FCJQCrraMuzvQYb1D5C9jBMbQmUmCXzHnOBHfMmGKSshE3sEv4sNGQFAlNGH_Rq4b8vkj/pub?gid=845386428&single=true&output=csv",
+  LIVE_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ54fID9-FCJQCrraMuzvQYb1D5C9jBMbQmUmCXzHnOBHfMmGKSshE3sEv4sNGQFAlNGH_Rq4b8vkj/pub?gid=845386428LIVE_CSV_URL: ""single=trueLIVE_CSV_URL: ""output=csv",
   BACKUP_URL: "data/active_schools.csv",
 
   // Claude mode: the Google Sheet the owner loads data from
   SHEET_ID: "17X6-nkTtPTP4xxoxCXnYhMW0YxbA8pXnXECMzw-Cag0",
-  SHEET_RANGE: "'Dashboard feed'!A1:P3000",
+  SHEET_RANGE: "'Dashboard feed'!A1:Q3000",
 
   TITLE: "PBA School Dashboard",
   SUBTITLE: "Academic Year 2026–2027",
@@ -37,9 +37,9 @@ const SETTINGS = {
   TARGET_STUDENTS: 40, // at least 40 students
   TARGET_EACH: 20,     // 20 in S5 and 20 in S6
 
-  // Weekly competition chart: first and last week shown (Monday to Sunday)
-  CHART_FROM: "2026-10-19",
-  CHART_TO: "2026-11-22",
+  // Weekly competition chart: Monday of the first week and Friday of the last week shown
+  CHART_FROM: "2026-10-26",
+  CHART_TO: "2026-11-20",
 
   // Targets for the Project Assignment scorecards (%)
   TARGET_DOWNLOADED: 99,
@@ -142,6 +142,7 @@ button.reset { cursor: pointer; font-weight: 600; color: var(--brand); width: au
 /* scorecards */
 .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
 .kpis.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.kpis.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); min-width: 0; }
 .kpi .label { font-size: 14px; color: var(--ink-2); font-weight: 500; }
 .kpi .value { font-size: 30px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; margin-top: 4px; font-variant-numeric: tabular-nums; }
@@ -186,6 +187,10 @@ button.reset { cursor: pointer; font-weight: 600; color: var(--brand); width: au
 .trend .legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
 .trend .legend i.plan { border-color: var(--plan); border-top-style: dashed; }
 .trend .legend i.done { border-color: var(--bar); }
+.trend .legend i.box { width: 12px; height: 12px; border: 0; border-radius: 3px; }
+.trend .legend i.held { background: var(--good); }
+.trend .legend i.planned { background: var(--good); opacity: .45; }
+.trend .legend i.cum { border-color: var(--plan); }
 .trend .wk { cursor: default; }
 .trend .wk:hover .hit, .trend .wk:focus .hit { fill: var(--brand-soft); }
 .trend .note { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--warn-soft); font-size: 14px; color: var(--ink); }
@@ -240,7 +245,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
 
 @media (max-width: 860px) {
   .kpis, .status-row, .kpis.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .kpis.three > :last-child { grid-column: 1 / -1; }
+  .kpis.three > :last-child, .kpis.five > :last-child { grid-column: 1 / -1; }
   .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .filter-grid .reset-wrap { grid-column: 1 / -1; }
   button.reset { width: 100%; }
@@ -356,7 +361,8 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     tSome: ["school pba teachers assigned in some of classes", "school pba teachers assigned in some classes"],
     tNone: ["school pba teachers did not assigned", "school pba teachers did not assign"],
     date: ["competition date", "date of competition"],
-    actual: ["actual competition date"]
+    actual: ["actual competition date"],
+    sbt: ["school conducted sbt", "school conducted t1 sbt? (yes/no)", "school conducted t1 sbt"]
   };
 
   // rows (first row = headers) -> compact records (no school code kept)
@@ -383,7 +389,8 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         downloaded: isYes(get(r, "downloaded")) ? 1 : 0,
         dos: isYes(get(r, "dos")) ? 1 : 0,
         tTotal: num(r, "tTotal") || 0, tAll: num(r, "tAll") || 0, tSome: num(r, "tSome") || 0, tNone: num(r, "tNone") || 0,
-        date: get(r, "date"), actual: get(r, "actual")
+        date: get(r, "date"), actual: get(r, "actual"),
+        sbt: isYes(get(r, "sbt")) ? 1 : 0
       });
     }
     return out;
@@ -394,7 +401,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       const p = ((s.tAll + (S.COUNT_SOME_AS_ASSIGNED ? s.tSome : 0)) / s.tTotal) * 100;
       status = p > S.GREEN_ABOVE ? "good" : p < S.RED_BELOW ? "bad" : "warn";
     }
-    return Object.assign({}, s, { status, hasTeachers: s.tTotal > 0, met40: s.students >= S.TARGET_STUDENTS, metBoth: s.s5 >= S.TARGET_EACH && s.s6 >= S.TARGET_EACH, comp: !!s.comp, downloaded: !!s.downloaded, dos: !!s.dos });
+    return Object.assign({}, s, { status, hasTeachers: s.tTotal > 0, met40: s.students >= S.TARGET_STUDENTS, metBoth: s.s5 >= S.TARGET_EACH && s.s6 >= S.TARGET_EACH, comp: !!s.comp, downloaded: !!s.downloaded, dos: !!s.dos, sbt: !!s.sbt });
   }
 
   // ---------- filters ----------
@@ -505,7 +512,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
 
   function renderAssignment() {
     const list = filtered(), n = list.length;
-    const dl = count(list, (s) => s.downloaded), dos = count(list, (s) => s.dos);
+    const dl = count(list, (s) => s.downloaded), dos = count(list, (s) => s.dos), sbt = count(list, (s) => s.sbt);
     const tT = sum(list, "tTotal"), tA = sum(list, "tAll"), tS = sum(list, "tSome"), tN = sum(list, "tNone");
     const assigned = list.reduce((a, s) => a + assignedOf(s), 0);
     const g = count(list, (s) => s.status === "good"), y = count(list, (s) => s.status === "warn"), r = count(list, (s) => s.status === "bad"), nr = count(list, (s) => s.status === "none");
@@ -516,7 +523,8 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         `<div class="panel"><div class="school-card">` +
         row2("School status", tag(s.status)) +
         row2("Downloaded projects", yesNo(s.downloaded, "Not yet done")) +
-        row2("DOS survey on time", yesNo(s.dos, "Not yet")) +
+        row2("DOS survey", yesNo(s.dos, "Not yet")) +
+        row2("School-based training", yesNo(s.sbt, "Not yet")) +
         row2("PBA teachers", s.hasTeachers ? fmt(s.tTotal) : `<span class="notyet">Not yet reported</span>`) +
         row2("Assigned in all classes", fmt(s.tAll)) + row2("Assigned in some classes", fmt(s.tSome)) +
         row2("Did not assign", fmt(s.tNone)) +
@@ -524,10 +532,11 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         `</div></div>`;
     }
 
-    let h = `<div class="kpis">` +
+    let h = `<div class="kpis five">` +
       kpi("Schools", fmt(n), "", "Active PBA schools") +
       kpiTarget("Schools that downloaded projects", fmt(dl), `${pct(dl, n)}%`, `${fmt(n - dl)} not yet done`, pct(dl, n), S.TARGET_DOWNLOADED) +
-      kpiTarget("Schools that submitted the DOS survey on time", fmt(dos), `${pct(dos, n)}%`, `${fmt(n - dos)} not yet`, pct(dos, n), S.TARGET_DOS) +
+      kpiTarget("Schools that submitted the DOS survey", fmt(dos), `${pct(dos, n)}%`, `${fmt(n - dos)} not yet`, pct(dos, n), S.TARGET_DOS) +
+      kpi("Schools that did the school-based training", fmt(sbt), `${pct(sbt, n)}%`, `${fmt(n - sbt)} not yet`, pct(sbt, n)) +
       (tT ? kpiTarget("PBA teachers who assigned projects", fmt(assigned), `${pct(assigned, tT)}%`, `of ${fmt(tT)} PBA teachers in schools that submitted the DOS survey`, pct(assigned, tT), S.TARGET_ASSIGNED)
           : kpi("PBA teachers who assigned projects", "–", "", "Not yet reported: comes from the DOS survey")) +
       `</div>`;
@@ -545,10 +554,10 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       h += `<h2 class="section-title">Schools in ${esc(state.sector)} sector</h2><p class="section-note">Lowest share of teachers who assigned first. Tap a school to see its details.</p>`;
       const sorted = list.slice().sort((a, b) => lowFirst(assignedShare([a]), assignedShare([b])) || a.school.localeCompare(b.school));
       const rows = sorted.map((s) => `<tr ${drillAttr("school", s.school, s)}><td class="first"><span class="go">${esc(s.school)}</span></td>` +
-        `<td data-label="Status">${tag(s.status)}</td><td data-label="Downloaded projects">${yesNo(s.downloaded, "Not yet done")}</td><td data-label="DOS survey on time">${yesNo(s.dos, "Not yet")}</td>` +
+        `<td data-label="Status">${tag(s.status)}</td><td data-label="Downloaded projects">${yesNo(s.downloaded, "Not yet done")}</td><td data-label="DOS survey">${yesNo(s.dos, "Not yet")}</td>` +
         `<td class="n" data-label="PBA teachers">${s.hasTeachers ? fmt(s.tTotal) : "–"}</td><td class="n" data-label="Teachers who assigned">${s.hasTeachers ? fmt(assignedOf(s)) + `<span class="pct">${pct(assignedOf(s), s.tTotal)}%</span>` : "–"}</td></tr>`);
       const L = limitRows(listKey("schools"), rows, S.SCHOOL_LIST_LIMIT);
-      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>School</th><th>Status</th><th>Downloaded projects</th><th>DOS survey on time</th><th class="n">PBA teachers</th><th class="n">Teachers who assigned</th></tr></thead><tbody>${L.html}</tbody></table></div>${L.more}</div>`;
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>School</th><th>Status</th><th>Downloaded projects</th><th>DOS survey</th><th class="n">PBA teachers</th><th class="n">Teachers who assigned</th></tr></thead><tbody>${L.html}</tbody></table></div>${L.more}</div>`;
     } else {
       const lvl = LEVEL_NAME[child].toLowerCase();
       h += `<h2 class="section-title">Comparison by ${lvl}</h2>`;
@@ -558,7 +567,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         return `<tr ${attrs || ""} ${cls ? `class="${cls}"` : ""}><td class="first">${attrs ? `<span class="go">${esc(label)}</span>` : esc(label)}</td>` +
           `<td class="n" data-label="Schools">${fmt(k)}</td>` +
           `<td class="n" data-label="Downloaded projects">${numPct(count(gg, (s) => s.downloaded), k)}</td>` +
-          `<td class="n" data-label="DOS survey on time">${numPct(count(gg, (s) => s.dos), k)}</td>` +
+          `<td class="n" data-label="DOS survey">${numPct(count(gg, (s) => s.dos), k)}</td>` +
           `<td class="wide" data-label="School status">${statusCounts(count(gg, (s) => s.status === "good"), count(gg, (s) => s.status === "warn"), count(gg, (s) => s.status === "bad"))}</td></tr>`;
       };
       const reds = (gg) => count(gg, (s) => s.status === "bad"), yellows = (gg) => count(gg, (s) => s.status === "warn");
@@ -568,7 +577,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr>` +
         `<th>${LEVEL_NAME[child]}</th><th class="n">Schools</th>` +
         `<th class="n">Downloaded projects<span class="th-sub">schools that downloaded</span></th>` +
-        `<th class="n">DOS survey on time<span class="th-sub">schools that submitted</span></th>` +
+        `<th class="n">DOS survey<span class="th-sub">schools that submitted</span></th>` +
         `<th>School status<span class="th-sub">number of schools by colour</span></th>` +
         `</tr></thead><tbody>${L.html}${line("Total", list, "", "total")}</tbody></table></div>${L.more}</div>`;
 
@@ -606,48 +615,83 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
   }
   const shortDay = (iso) => `${+iso.slice(8)} ${MONTHS[+iso.slice(5, 7) - 1]}`;
   function weeklyChart(list) {
+    // weeks Monday–Friday; a date on a weekend counts in that week
     const weeks = weeksBetween(S.CHART_FROM, S.CHART_TO);
-    const inWeek = (d, w) => { const k = dateKey(d); return k && k >= w.start && k <= w.end; };
-    weeks.forEach((w) => { w.plan = count(list, (s) => inWeek(s.date, w)); w.done = count(list, (s) => inWeek(s.actual, w)); });
     const today = ymd(new Date());
-    const W = Math.max(300, Math.min(1060, ($("main").clientWidth || 1000) - 34)), H = 230;
+    const first = weeks[0].start, last = weeks[weeks.length - 1].end;
+    const wkOf = (k) => { if (!k) return -1; if (k < first) return 0; return weeks.findIndex((w) => k >= w.start && k <= w.end); };
+    weeks.forEach((w) => { w.held = 0; w.plan = 0; w.future = w.start > today; w.now = today >= w.start && today <= w.end; });
+    // held: schools with a competition (column "School level competition") or an actual date; placed in the week they held it
+    let lastPast = -1; weeks.forEach((w, i) => { if (!w.future) lastPast = i; });
+    let held = 0, early = 0;
+    list.forEach((s) => {
+      const a = dateKey(s.actual), d = dateKey(s.date);
+      if (!s.comp) return;
+      held++;
+      let i = a ? wkOf(a) : (d && d <= today ? wkOf(d) : -1);
+      if (i < 0 || i > lastPast) i = Math.max(lastPast, 0);
+      if (a && a < first) early++;
+      weeks[i].held++;
+    });
+    // projection: the schools still to go, spread evenly over the weeks left before the deadline
+    const left = Math.max(0, list.length - held), future = weeks.filter((w) => w.future);
+    future.forEach((w, k) => { w.plan = Math.floor(left / future.length) + (k < left % future.length ? 1 : 0); });
+    const perWeek = future.length ? Math.ceil(left / future.length) : 0;
+    const withDate = count(list, (s) => !s.comp && !dateKey(s.actual) && dateKey(s.date) > today);
+    let run = 0;
+    weeks.forEach((w) => { w.total = w.held + w.plan; run += w.total; w.cum = list.length ? Math.round((run / list.length) * 100) : 0; });
+    const dayRange = (w) => { const e = new Date(w.start + "T00:00:00Z"); e.setUTCDate(e.getUTCDate() + 4); const f = ymd(e);
+      return w.start.slice(5, 7) === f.slice(5, 7) ? `${+w.start.slice(8)}-${+f.slice(8)} ${MONTHS[+f.slice(5, 7) - 1]}` : `${shortDay(w.start)} - ${shortDay(f)}`; };
+
+    const W = Math.max(300, Math.min(1060, ($("main").clientWidth || 1000) - 34)), H = 260;
     const narrow = W < 560;
-    const L = 30, R = 6, T = 18, B = narrow ? 70 : 58, iw = W - L - R, ih = H - T - B;
-    const max = Math.max(4, ...weeks.map((w) => Math.max(w.plan, w.done)));
-    const step = Math.ceil(max / 4), top = step * 4;
-    const colW = iw / weeks.length;
-    const x = (i) => L + colW * (i + 0.5); // each week sits in the middle of its own column
+    const L = 34, R = 54, T = 22, B = narrow ? 64 : 52, iw = W - L - R, ih = H - T - B;
+    const max = Math.max(4, ...weeks.map((w) => w.total));
+    const step = Math.ceil(max / 4 / (max > 40 ? 10 : 1)) * (max > 40 ? 10 : 1), top = step * 4;
+    const colW = iw / weeks.length, bw = Math.min(90, colW * 0.56);
+    const x = (i) => L + colW * (i + 0.5);
     const y = (v) => T + ih - (v / top) * ih;
-    const line = (k) => weeks.map((w, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(w[k]).toFixed(1)}`).join(" ");
+    const yp = (p) => T + ih - (p / 100) * ih;
     let g = "";
-    for (let v = 0; v <= top; v += step) g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${v}</text>`;
+    for (let k = 0; k <= 4; k++) {
+      const v = step * k;
+      g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>` +
+        `<text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${v}</text>` +
+        `<text x="${W - R + 6}" y="${y(v) + 4}" text-anchor="start" font-size="11" fill="var(--ink-3)">${k * 25}%</text>`;
+    }
     let cols = "";
     weeks.forEach((w, i) => {
-      const now = today >= w.start && today <= w.end;
-      const cx = x(i);
-      cols += `<g class="wk" tabindex="0" data-tip="${shortDay(w.start)} – ${shortDay(w.end)}|Planned: ${w.plan}|Held: ${w.done}" data-x="${cx}" data-y="${y(Math.max(w.plan, w.done))}">` +
+      const cx = x(i), yh = y(w.held), yt = y(w.total);
+      const tip = [`Wk ${i + 1} (${dayRange(w)})${w.future ? " - plan" : ""}`,
+        w.future ? `Needed: ${w.plan} schools` : `Held: ${w.held} schools`, `Total by end of week: ${w.cum}% of schools`].filter(Boolean).join("|");
+      cols += `<g class="wk" tabindex="0" data-tip="${tip}" data-x="${cx}" data-y="${Math.min(yt, yp(w.cum))}">` +
         `<rect class="hit" x="${cx - colW / 2}" y="${T}" width="${colW}" height="${ih}" fill="transparent"/>` +
-        (now ? `<line x1="${cx}" x2="${cx}" y1="${T}" y2="${T + ih}" stroke="var(--brand)" stroke-width="1" stroke-dasharray="3 3"/>` : "") +
+        (w.held ? `<rect x="${cx - bw / 2}" y="${yh}" width="${bw}" height="${T + ih - yh}" fill="var(--good)"/>` : "") +
+        (w.plan ? `<rect x="${cx - bw / 2}" y="${yt}" width="${bw}" height="${yh - yt}" fill="var(--good)" fill-opacity=".45"/>` : "") +
+        (w.total ? (T + ih - yt >= 24
+          ? `<text x="${cx}" y="${yt + 16}" text-anchor="middle" font-size="12" font-weight="700" fill="${w.plan ? "var(--ink)" : "#fff"}">${w.total}</text>`
+          : `<text x="${cx}" y="${yt - 6}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">${w.total}</text>`) : "") +
         (narrow
-          ? `<text x="${cx}" y="${H - B + 16}" text-anchor="middle" font-size="11" font-weight="${now ? 700 : 600}" fill="var(--ink)">${shortDay(w.start)}</text>` +
-            `<text x="${cx}" y="${H - B + 31}" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">Plan ${w.plan}</text>` +
-            `<text x="${cx}" y="${H - B + 45}" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">Held ${w.done}</text>` +
-            (now ? `<text x="${cx}" y="${H - B + 60}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--brand)">This week</text>` : "")
-          : `<text x="${cx}" y="${H - B + 18}" text-anchor="middle" font-size="11.5" font-weight="${now ? 700 : 500}" fill="var(--ink)">${shortDay(w.start)} – ${shortDay(w.end)}</text>` +
-            `<text x="${cx}" y="${H - B + 34}" text-anchor="middle" font-size="11" fill="var(--ink-2)">Plan ${w.plan} · Held ${w.done}</text>` +
-            (now ? `<text x="${cx}" y="${H - B + 49}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--brand)">This week</text>` : "")) +
+          ? `<text x="${cx}" y="${H - B + 16}" text-anchor="middle" font-size="11" font-weight="${w.now ? 700 : 600}" fill="var(--ink)">Wk ${i + 1}</text>` +
+            `<text x="${cx}" y="${H - B + 30}" text-anchor="middle" font-size="10" fill="var(--ink-2)">${dayRange(w)}</text>` +
+            `<text x="${cx}" y="${H - B + 44}" text-anchor="middle" font-size="10" font-weight="600" fill="${w.now ? "var(--brand)" : "var(--ink-3)"}">${w.now ? "This week" : w.future ? "Plan" : ""}</text>`
+          : `<text x="${cx}" y="${H - B + 18}" text-anchor="middle" font-size="11.5" font-weight="${w.now ? 700 : 500}" fill="var(--ink)">Wk ${i + 1} (${dayRange(w)})${w.future ? " - plan" : ""}</text>` +
+            (w.now ? `<text x="${cx}" y="${H - B + 34}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--brand)">This week</text>` : "")) +
         `</g>`;
     });
-    const dots = (k, color) => weeks.map((w, i) => `<circle cx="${x(i)}" cy="${y(w[k])}" r="4.5" fill="${color}" stroke="var(--surface)" stroke-width="2"/>`).join("");
-    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Competitions planned and held per week">${g}${cols}` +
-      `<path d="${line("plan")}" fill="none" stroke="var(--plan)" stroke-width="2" stroke-dasharray="6 5"/>` +
-      `<path d="${line("done")}" fill="none" stroke="var(--bar)" stroke-width="2.5"/>` +
-      dots("plan", "var(--plan)") + dots("done", "var(--bar)") + `</svg>`;
-    const noDate = count(list, (s) => !s.date);
-    const outside = count(list, (s) => s.date && !weeks.some((w) => inWeek(s.date, w)));
-    return `<div class="panel trend" id="trend"><div class="legend"><span><i class="plan"></i>Planned (competition date set)</span><span><i class="done"></i>Held (competition done)</span></div>${svg}` +
-      `<div class="note"><b>${fmt(noDate)}</b> of ${fmt(list.length)} schools have no competition date yet.` +
-      (outside ? ` ${fmt(outside)} more have a date outside these weeks.` : "") + `</div></div>`;
+    const path = weeks.map((w, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${yp(w.cum).toFixed(1)}`).join(" ");
+    const dots = weeks.map((w, i) => `<circle cx="${x(i)}" cy="${yp(w.cum)}" r="4" fill="var(--plan)" stroke="var(--surface)" stroke-width="2"/>`).join("");
+    const lastW = weeks[weeks.length - 1], lx = x(weeks.length - 1), ly = yp(lastW.cum);
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Schools completing the competition per week, with the cumulative share of schools">${g}${cols}` +
+      `<path d="${path}" fill="none" stroke="var(--plan)" stroke-width="2" pointer-events="none"/>${dots}` +
+      `<text x="${lx}" y="${ly - 9}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink-2)" pointer-events="none">${lastW.cum}%</text>` +
+      `<text transform="translate(11 ${T + ih / 2}) rotate(-90)" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">Schools per week</text>` +
+      `<text transform="translate(${W - 4} ${T + ih / 2}) rotate(90)" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">Cumulative % of schools</text></svg>`;
+    return `<div class="panel trend" id="trend"><div class="legend"><span><i class="box held"></i>Held (actual)</span><span><i class="box planned"></i>Plan to finish by ${shortDay(S.CHART_TO)}</span><span><i class="cum"></i>Cumulative % of schools</span></div>${svg}` +
+      `<div class="note"><b>${fmt(held)}</b> of ${fmt(list.length)} schools have held their competition. ` +
+      (future.length ? `To finish by <b>${shortDay(S.CHART_TO)}</b>, the other <b>${fmt(left)}</b> need about <b>${fmt(perWeek)}</b> schools a week. So far ${fmt(withDate)} of them have set a date.`
+        : (left ? `<b>${fmt(left)}</b> schools did not hold it by ${shortDay(S.CHART_TO)}.` : "All schools are done.")) +
+      (early ? ` Week 1 includes ${fmt(early)} held before ${shortDay(first)}.` : "") + `</div></div>`;
   }
   // tooltip for the weekly chart (hover on computer, tap on phone)
   function trendTip(e) {
@@ -656,8 +700,8 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     let tip = box.querySelector(".tip");
     if (!g) { if (tip) tip.remove(); return; }
     if (!tip) { tip = document.createElement("div"); tip.className = "tip"; box.appendChild(tip); }
-    const [t1, t2, t3] = g.dataset.tip.split("|");
-    tip.innerHTML = `<b>${t1}</b><br>${t2}<br>${t3}`;
+    const [t1, ...rest] = g.dataset.tip.split("|");
+    tip.innerHTML = `<b>${t1}</b><br>` + rest.join("<br>");
     const svg = box.querySelector("svg"), r = svg.getBoundingClientRect(), br = box.getBoundingClientRect();
     const k = r.width / svg.viewBox.baseVal.width;
     tip.style.left = (r.left - br.left + g.dataset.x * k) + "px";
@@ -690,7 +734,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       `</div>`;
     const dateCell = (s) => `<td data-label="Competition date">${dateText(s)}</td>`;
     // weekly chart only above sector level (a sector has too few schools for a trend)
-    if (!state.sector) h += `<h2 class="section-title">Competitions per week</h2><p class="section-note">Number of schools planning their competition each week (dashed line), against the number that have held it (solid line). Weeks run Monday to Sunday.</p>` + weeklyChart(list);
+    if (!state.sector) h += `<h2 class="section-title">School competition: weekly completion projection</h2><p class="section-note">Projection to the ${shortDay(S.CHART_TO)} deadline. Dark green bars are schools that held their competition that week. Light green bars ("plan") are the schools that must hold it each week left to finish on time. The grey line shows the share of all schools done by the end of each week.</p>` + weeklyChart(list);
 
     const child = childLevel();
     const lvl = LEVEL_NAME[child].toLowerCase();
@@ -842,7 +886,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       const records = [];
       districts.forEach((d) => (d.rows || []).forEach((r) => records.push({
         province: d.province, district: d.district, sector: r[0], school: r[1], comp: r[2], s5: r[3], s6: r[4], students: r[5],
-        downloaded: r[6], dos: r[7], tTotal: r[8], tAll: r[9], tSome: r[10], tNone: r[11], date: r[12] || "", actual: r[13] || ""
+        downloaded: r[6], dos: r[7], tTotal: r[8], tAll: r[9], tSome: r[10], tNone: r[11], date: r[12] || "", actual: r[13] || "", sbt: r[14] || 0
       })));
       if (!records.length) {
         $("updated").textContent = "No data yet";
@@ -874,7 +918,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         records.forEach((s) => {
           const key = s.province + "|" + s.district;
           if (!byDistrict.has(key)) byDistrict.set(key, { province: s.province, district: s.district, rows: [] });
-          byDistrict.get(key).rows.push([s.sector, s.school, s.comp, s.s5, s.s6, s.students, s.downloaded, s.dos, s.tTotal, s.tAll, s.tSome, s.tNone, s.date, s.actual]);
+          byDistrict.get(key).rows.push([s.sector, s.school, s.comp, s.s5, s.s6, s.students, s.downloaded, s.dos, s.tTotal, s.tAll, s.tSome, s.tNone, s.date, s.actual, s.sbt]);
         });
         const idOf = (k) => k.replace(/[^A-Za-z0-9_.~:@+-]/g, "_").slice(0, 120);
         const keep = new Set();
