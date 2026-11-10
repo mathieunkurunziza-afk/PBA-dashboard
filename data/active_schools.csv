@@ -274,7 +274,7 @@ East,Nyagatare,Mukama,G.S BUFUNDA,1,8,7,15,Yes,Yes,3,3,,0,,,Yes
 East,Nyagatare,Mukama,G.S GISHORORO,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Mukama,G.S HUNGA,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
 East,Nyagatare,Musheri,G.S MUSHERI,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
-East,Nyagatare,Nyagatare,NYAGATARE S.S,0,0,0,0,Yes,Yes,7,7,,0,,,Yes
+East,Nyagatare,Nyagatare,NYAGATARE S.S,1,7,8,15,Yes,Yes,7,7,,0,,,Yes
 East,Nyagatare,Nyagatare,G.S CYONYO,0,0,0,0,Yes,Yes,5,5,,0,,,Yes
 East,Nyagatare,Nyagatare,G.S NYAGATARE,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Nyagatare,MARYHILL GIRLS' SECONDARY SCHOOL,0,0,0,0,Yes,Yes,7,7,,0,,,Yes
@@ -284,10 +284,10 @@ East,Nyagatare,Rukomo,G.S RURENGE,0,0,0,0,Yes,Yes,6,6,,0,,,Yes
 East,Nyagatare,Rwempasha,G.S RWEMPASHA,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Rwempasha,G.S NYENDO,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Rwempasha,G.S BWEYA,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
-East,Nyagatare,Rwimiyaga,G.S GATEBE,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
+East,Nyagatare,Rwimiyaga,G.S GATEBE,1,4,4,8,Yes,Yes,2,2,,0,,,Yes
 East,Nyagatare,Rwimiyaga,G.S GACUNDEZI,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 East,Nyagatare,Rwimiyaga,G.S RWIMIYAGA,0,0,0,0,Yes,Yes,6,6,,0,,,Yes
-East,Nyagatare,Rwimiyaga,G.S GAKAGATI,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
+East,Nyagatare,Rwimiyaga,G.S GAKAGATI,1,5,8,13,Yes,Yes,2,2,,0,,,Yes
 East,Nyagatare,Rwimiyaga,G.S NYARUPFUBIRE,0,0,0,0,Yes,Yes,5,5,,0,,,Yes
 East,Nyagatare,Tabagwe,G.S RUNYINYA,1,18,12,30,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Tabagwe,G.S TABAGWE,1,14,5,19,Yes,Yes,7,7,,0,,,Yes
@@ -867,14 +867,14 @@ South,Nyaruguru,Nyagisozi,GS MWOYA,0,0,0,0,Yes,No,2,2,,0,,,Yes
 South,Nyaruguru,Ruheru,GS REMERA,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 South,Nyaruguru,Ruheru,GS RUHERU,0,0,0,0,Yes,Yes,2,2,,0,2026-10-30,,Yes
 South,Nyaruguru,Ruheru,Gs Yanza,0,0,0,0,Yes,Yes,1,1,,0,2026-11-02,,Yes
-South,Nyaruguru,Ruramba,GS RURAMBA,0,0,0,0,Yes,Yes,3,3,,0,,,No
+South,Nyaruguru,Ruramba,GS RURAMBA,1,18,20,38,Yes,Yes,3,3,,0,,,No
 South,Nyaruguru,Ruramba,G S MATYAZO,1,12,20,32,Yes,Yes,1,1,,0,,,Yes
 South,Nyaruguru,Rusenge,GS RUNYINYA,1,4,3,7,Yes,Yes,2,2,,0,,,Yes
 South,Nyaruguru,Rusenge,GS RASANIRO / TSS,1,18,36,54,Yes,Yes,2,2,,0,,,Yes
 North,Burera,Bungwe,APAPEDUC BUNGWE,0,0,0,0,Yes,Yes,5,2,2,1,,,Yes
-North,Burera,Bungwe,GS BUNGWE,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
+North,Burera,Bungwe,GS BUNGWE,1,16,31,47,Yes,Yes,2,2,,0,,,Yes
 North,Burera,Butaro,GS NYAMICUCU,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
-North,Burera,Butaro,GS RUNABA,0,0,0,0,Yes,Yes,5,5,,0,,,Yes
+North,Burera,Butaro,GS RUNABA,1,2,3,5,Yes,Yes,5,5,,0,,,Yes
 North,Burera,Butaro,ES RUNABA,0,0,0,0,Yes,Yes,6,6,,0,,,Yes
 North,Burera,Cyanika,GS BUTETE,0,0,0,0,Yes,Yes,6,6,,0,,,Yes
 North,Burera,Cyanika,GS KAGITEGA,1,10,8,18,Yes,Yes,3,3,,0,,,Yes
