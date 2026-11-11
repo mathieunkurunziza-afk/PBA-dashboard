@@ -42,7 +42,7 @@ East,Ngoma,Mugesera,G.S NYANGE,1,20,20,40,Yes,Yes,5,3,2,0,,,Yes
 East,Ngoma,Murama,G S   MVUMBA,1,20,20,40,Yes,Yes,1,1,,0,2026-10-28,,Yes
 East,Ngoma,Mutenderi,G.S BARE,0,0,0,0,Yes,Yes,5,5,,0,,,Yes
 East,Ngoma,Remera,GS NYAMUGARI,1,6,6,12,Yes,Yes,4,3,1,0,,,Yes
-East,Ngoma,Remera,G.S KABARE,0,0,0,0,Yes,Yes,12,12,,0,,,Yes
+East,Ngoma,Remera,G.S KABARE,1,3,3,6,Yes,Yes,12,12,,0,,,Yes
 East,Ngoma,Rukira,G.S GITUKU,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
 East,Ngoma,Rukira,ES RURAMA,1,20,20,40,Yes,Yes,8,8,,0,,,Yes
 East,Ngoma,Rukumberi,GS RWINTASHYA,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
@@ -516,7 +516,7 @@ West,Rusizi,Nkanka,GS SAINT BONAVENTURE  NKANKA,0,0,0,0,Yes,No,1,1,,0,,,Yes
 West,Rusizi,Nkombo,GS ISHYWA,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
 West,Rusizi,Nkombo,GS BUGUMIRA,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 West,Rusizi,Nkombo,GS SAINT PIERRE NKOMBO,0,0,0,0,Yes,Yes,8,8,,0,,,Yes
-West,Rusizi,Nkungu,GS GATARE,0,0,0,0,Yes,,,,,0,,,Yes
+West,Rusizi,Nkungu,GS GATARE,0,0,0,0,Yes,No,1,1,,0,,,Yes
 West,Rusizi,Nkungu,GS MATARE,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 West,Rusizi,Nyakabuye,GS NYAKABWENDE,0,0,0,0,Yes,No,2,2,,0,,,Yes
 West,Rusizi,Nyakabuye,GS NYAMUBEMBE,1,4,19,23,Yes,No,1,1,,0,,,Yes
