@@ -439,7 +439,7 @@ West,Karongi,Rubengera,GS BUBAZI,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
 West,Karongi,Rubengera,GS NYARUBUYE,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 West,Karongi,Rubengera,GS KIBIRIZI,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 West,Karongi,Rugabano,GS GAHENGERI,1,10,20,30,Yes,Yes,2,2,,0,,,Yes
-West,Karongi,Rugabano,ES RUGABANO,0,0,0,0,Yes,Yes,5,2,2,1,,,Yes
+West,Karongi,Rugabano,ES RUGABANO,1,24,25,49,Yes,Yes,5,2,2,1,,,Yes
 West,Karongi,Rugabano,ES NGOMA / TSS,1,13,12,25,Yes,Yes,1,1,,0,,,Yes
 West,Karongi,Ruganda,GS BIGUHU A,1,16,20,36,Yes,Yes,5,5,,0,,,Yes
 West,Karongi,Ruganda,ES RUGANDA,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
@@ -500,7 +500,7 @@ West,Rusizi,Gashonga,GS MUREHE,1,22,30,52,Yes,Yes,2,2,,0,,,Yes
 West,Rusizi,Gashonga,GS MIBILIZI,0,0,0,0,Yes,No,5,5,,0,,,Yes
 West,Rusizi,Giheke,NTURA PROTESTANT,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
 West,Rusizi,Giheke,GIHEKE,0,0,0,0,Yes,No,4,4,,0,,,Yes
-West,Rusizi,Gihundwe,GS ST BRUNO GIHUNDWE A,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
+West,Rusizi,Gihundwe,GS ST BRUNO GIHUNDWE A,1,22,17,39,Yes,Yes,3,3,,0,,,Yes
 West,Rusizi,Gikundamvura,G.S MWEGERA,1,19,40,59,Yes,No,1,1,,0,,,Yes
 West,Rusizi,Gitambi,GS KABOZA,1,15,22,37,Yes,No,2,2,,0,,,Yes
 West,Rusizi,Gitambi,GS HANGABASHI,1,5,9,14,Yes,Yes,1,1,,0,,,Yes
@@ -586,7 +586,7 @@ Kigali,Gasabo,Rusororo,GS RUHANGA,0,0,0,0,Yes,No,3,3,,0,,,Yes
 Kigali,Gasabo,Rusororo,GS KABUGA,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 Kigali,Gasabo,Rutunga,GS RUTUNGA,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 Kigali,Kicukiro,Gahanga,G.S GAHANGA I,1,20,20,40,Yes,Yes,2,2,,0,,,Yes
-Kigali,Kicukiro,Gahanga,G.S KAREMBURE,0,0,0,0,Yes,Yes,5,5,,0,,,Yes
+Kigali,Kicukiro,Gahanga,G.S KAREMBURE,1,3,3,6,Yes,Yes,5,5,,0,,,Yes
 Kigali,Kicukiro,Gatenga,G.S GATENGA I,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 Kigali,Kicukiro,Gikondo,G.S Saint Vincent Pallotti Gikondo,0,0,0,0,Yes,Yes,3,1,2,0,,,Yes
 Kigali,Kicukiro,Kagarama,KAGARAMA S S,0,0,0,0,Yes,No,14,14,,0,,,Yes
@@ -664,7 +664,7 @@ South,Muhanga,Kabacuzi,GS KIBYIMBA,0,0,0,0,Yes,Yes,5,5,,0,,,Yes
 South,Muhanga,Kibangu,GS  JURWE,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
 South,Muhanga,Kibangu,ES NYAKABANDA,1,14,6,20,Yes,Yes,3,3,,0,,,Yes
 South,Muhanga,Kibangu,GS KIBANGU,1,8,8,16,Yes,Yes,3,3,,0,,,Yes
-South,Muhanga,Kiyumba,KANYANZA A,0,0,0,0,Yes,Yes,2,1,1,0,,,Yes
+South,Muhanga,Kiyumba,KANYANZA A,1,20,20,40,Yes,Yes,2,1,1,0,,,Yes
 South,Muhanga,Kiyumba,GS BUDENDE,1,5,5,10,Yes,Yes,5,5,,0,,,Yes
 South,Muhanga,Muhanga,GS MATA,1,6,2,8,Yes,Yes,1,1,,0,,,Yes
 South,Muhanga,Muhanga,GS MUHANGA,1,3,3,6,Yes,Yes,5,5,,0,,,Yes
@@ -765,7 +765,7 @@ South,Huye,Ngoma,PETIT SEMINAIRE VIRGO FIDELIS DE BUTARE,0,0,0,0,Yes,Yes,6,6,,0,
 South,Huye,Ngoma,PETIT SEMINAIRE BAPTISTE,0,0,0,0,Yes,Yes,5,5,,0,,,Yes
 South,Huye,Ngoma,ENDP KARUBANDA,0,0,0,0,Yes,Yes,9,9,,0,2026-11-13,,Yes
 South,Huye,Ngoma,G.S.O  BUTARE,0,0,0,0,Yes,Yes,18,17,0,1,,,Yes
-South,Huye,Ruhashya,GS RUGOGWE / TSS,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
+South,Huye,Ruhashya,GS RUGOGWE / TSS,1,20,20,40,Yes,Yes,4,4,,0,,,Yes
 South,Huye,Rusatira,G.S BUHIMBA,0,0,0,0,Yes,Yes,3,2,1,0,,,Yes
 South,Huye,Rusatira,GS GAFUMBA,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
 South,Huye,Rusatira,Saint Mary's High School Kiruhura,0,0,0,0,Yes,Yes,11,11,,0,,,Yes
@@ -882,7 +882,7 @@ North,Burera,Cyanika,ES KIDAHO,1,6,13,19,Yes,Yes,5,5,,0,,,Yes
 North,Burera,Cyeru,ES KIRAMBO,1,25,25,50,Yes,Yes,12,12,,0,,,Yes
 North,Burera,Cyeru,GS JEAN DE LA MENNAIS KIRAMBO,1,6,6,12,Yes,Yes,1,1,,0,,,Yes
 North,Burera,Gahunga,GS GAHUNGA,1,3,3,6,Yes,Yes,2,1,1,0,,,Yes
-North,Burera,Gatebe,GS RUYANGE II,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
+North,Burera,Gatebe,GS RUYANGE II,1,0,22,22,Yes,Yes,2,2,,0,,,Yes
 North,Burera,Gatebe,GS RWASA,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
 North,Burera,Gitovu,GS GICURA,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 North,Burera,Gitovu,Gs Kiboga,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
