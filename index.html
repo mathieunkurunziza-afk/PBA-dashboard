@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
 <title>PBA School Dashboard</title>
 <meta name="description" content="Project assignment and school competition status for education officials.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +25,7 @@ const SETTINGS = {
 
   // Claude mode: the Google Sheet the owner loads data from
   SHEET_ID: "17X6-nkTtPTP4xxoxCXnYhMW0YxbA8pXnXECMzw-Cag0",
-  SHEET_RANGE: "'Dashboard feed'!A1:Q3000",
+  SHEET_RANGE: "'Dashboard feed'!A1:R3000",
 
   TITLE: "PBA School Dashboard",
   SUBTITLE: "Academic Year 2026–2027",
@@ -190,6 +192,9 @@ button.reset { cursor: pointer; font-weight: 600; color: var(--brand); width: au
 .trend .legend i.box { width: 12px; height: 12px; border: 0; border-radius: 3px; }
 .trend .legend i.held { background: var(--good); }
 .trend .legend i.planned { background: var(--good); opacity: .45; }
+.trend .legend .hintl { color: var(--ink-3); }
+.trend .legend i.trendl { border-top: 2.5px solid var(--brand); }
+.trend .legend i.need { background: none; border: 1.5px dashed var(--ink-3); }
 .trend .legend i.cum { border-color: var(--plan); }
 .trend .wk { cursor: default; }
 .trend .wk:hover .hit, .trend .wk:focus .hit { fill: var(--brand-soft); }
@@ -280,8 +285,6 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 </style>
 
-</head>
-<body>
 <header class="top">
   <div class="wrap">
     <div class="title-row">
@@ -362,6 +365,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     tNone: ["school pba teachers did not assigned", "school pba teachers did not assign"],
     date: ["competition date", "date of competition"],
     actual: ["actual competition date"],
+    form: ["competition form date"],
     sbt: ["school conducted sbt", "school conducted t1 sbt? (yes/no)", "school conducted t1 sbt"]
   };
 
@@ -389,22 +393,21 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         downloaded: isYes(get(r, "downloaded")) ? 1 : 0,
         dos: isYes(get(r, "dos")) ? 1 : 0,
         tTotal: num(r, "tTotal") || 0, tAll: num(r, "tAll") || 0, tSome: num(r, "tSome") || 0, tNone: num(r, "tNone") || 0,
-        date: get(r, "date"), actual: get(r, "actual"),
+        date: get(r, "date"), actual: get(r, "actual"), form: get(r, "form"),
         sbt: isYes(get(r, "sbt")) ? 1 : 0
       });
     }
     return out;
   }
-  // a school marked as held (1) whose date is still in the future counts as planned until that day
+  // today's date, as "2026-11-16"
   const TODAY = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; })();
-  function compLater(s) { const k = dateKey(s.actual) || dateKey(s.date); return !!k && k > TODAY; }
   function enrich(s) {
     let status = "none";
     if (s.tTotal > 0) {
       const p = ((s.tAll + (S.COUNT_SOME_AS_ASSIGNED ? s.tSome : 0)) / s.tTotal) * 100;
       status = p > S.GREEN_ABOVE ? "good" : p < S.RED_BELOW ? "bad" : "warn";
     }
-    return Object.assign({}, s, { status, hasTeachers: s.tTotal > 0, met40: s.students >= S.TARGET_STUDENTS, metBoth: s.s5 >= S.TARGET_EACH && s.s6 >= S.TARGET_EACH, comp: !!s.comp && !compLater(s), compSoon: !!s.comp && compLater(s), downloaded: !!s.downloaded, dos: !!s.dos || s.tTotal > 0, dosLate: !s.dos && s.tTotal > 0, sbt: !!s.sbt });
+    return Object.assign({}, s, { status, hasTeachers: s.tTotal > 0, met40: s.students >= S.TARGET_STUDENTS, metBoth: s.s5 >= S.TARGET_EACH && s.s6 >= S.TARGET_EACH, comp: !!s.comp || !!dateKey(s.form), downloaded: !!s.downloaded, dos: !!s.dos || s.tTotal > 0, dosLate: !s.dos && s.tTotal > 0, sbt: !!s.sbt });
   }
 
   // ---------- filters ----------
@@ -490,7 +493,9 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     return esc(t);
   }
   // the scheduled competition date from the tracker, or "Not scheduled"
-  const dateText = (s) => s.date ? fmtDate(s.date) : `<span class="notyet">Not scheduled</span>`;
+  const dateText = (s) => s.date ? fmtDate(s.date) : `<span class="notyet">${s.comp ? "No date given" : "Not scheduled"}</span>`;
+  // held or not, from "School level competition" (1 = held); shows the actual date when the tracker has one
+  const heldText = (s) => s.comp ? `<span class="yes">Held${s.actual ? " on " + fmtDate(s.actual) : ""}</span>` : `<span class="notyet">Not yet</span>`;
   // sortable key for a date: "2026-10-22", or "" when it can't be read
   function dateKey(d) {
     const t = String(d || "").trim(); let m;
@@ -616,102 +621,90 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
   }
   const shortDay = (iso) => `${+iso.slice(8)} ${MONTHS[+iso.slice(5, 7) - 1]}`;
   function weeklyChart(list) {
-    // weeks Monday–Friday; a date on a weekend counts in that week
+    // HELD per week: the date on the school's competition form (school_competition_Students_selection).
+    // EXPECTED: for this week and the weeks left, the same number as the last full week, capped at the schools still to go.
     const weeks = weeksBetween(S.CHART_FROM, S.CHART_TO);
-    const today = TODAY;
-    const first = weeks[0].start, last = weeks[weeks.length - 1].end;
-    const wkOf = (k) => { if (!k) return -1; if (k < first) return 0; return weeks.findIndex((w) => k >= w.start && k <= w.end); };
-    weeks.forEach((w) => { w.held = 0; w.plan = 0; w.future = w.start > today; w.now = today >= w.start && today <= w.end; });
-    // held: schools with a competition (column "School level competition") or an actual date; placed in the week they held it
-    let lastPast = -1; weeks.forEach((w, i) => { if (!w.future) lastPast = i; });
-    const cur = weeks.findIndex((w) => w.now);
-    // held schools go in the week they held it: actual date first, else their planned date.
-    // Held schools with no date at all get their own bar, so they don't land in "this week".
-    let held = 0, early = 0, undated = 0;
+    const today = TODAY, n = list.length;
+    const first = weeks[0].start;
+    weeks.forEach((w) => { w.held = 0; w.exp = 0; w.future = w.start > today; w.now = today >= w.start && today <= w.end; });
+    let heldAll = 0, noForm = 0;
     list.forEach((s) => {
       if (!s.comp) return;
-      held++;
-      const a = dateKey(s.actual), d = dateKey(s.date), k = a || d;
-      if (!k) { undated++; return; }
-      let i = wkOf(k);
-      if (i < 0 || i > lastPast) i = Math.max(lastPast, 0);   // date after today or outside the chart: count it up to now
-      if (k < first) early++;
+      heldAll++;
+      const k = dateKey(s.form);
+      if (!k) { noForm++; return; }
+      let i = k < first ? 0 : weeks.findIndex((w) => k >= w.start && k <= w.end);
+      if (i < 0) i = weeks.length - 1;
       weeks[i].held++;
     });
-    // projection: schools still to go, spread over this week and the weeks left before the deadline
-    const heldThis = cur >= 0 ? weeks[cur].held : 0;
-    const open = weeks.filter((w) => w.future || w.now);
-    let toGo = Math.max(0, list.length - (held - heldThis));      // left at the start of this week
-    open.forEach((w, k) => {
-      const share = Math.ceil(toGo / (open.length - k));
-      w.plan = Math.max(0, share - (w.now ? heldThis : 0));
-      toGo = Math.max(0, toGo - (w.now ? Math.max(share, heldThis) : share));
+    // EXPECTED each week = schools not yet done at the start of that week, shared equally over the weeks left
+    // until the deadline (that week included). Recalculated every week, so a slow week raises the next weeks' target.
+    let before = 0;
+    weeks.forEach((w, i) => {
+      const leftAtStart = Math.max(0, n - before);
+      w.exp = Math.ceil(leftAtStart / (weeks.length - i));
+      before += w.future ? w.exp : w.held;
     });
-    const left = Math.max(0, list.length - held);
-    const perWeek = open.length ? Math.ceil(left / open.length) : 0;
-    const withDate = count(list, (s) => !s.comp && !dateKey(s.actual) && dateKey(s.date) >= today);
-    if (undated) weeks.unshift({ nodate: true, held: undated, plan: 0 });
-    const off = undated ? 1 : 0;
-    let run = 0;
-    weeks.forEach((w) => { w.total = w.held + w.plan; run += w.total; w.cum = list.length ? Math.round((run / list.length) * 100) : 0; });
+    const cur = weeks.find((w) => w.now);
+    const futureExp = weeks.reduce((a, w) => a + (w.future ? w.exp || 0 : 0), 0) + (cur ? Math.max(0, (cur.exp || 0) - cur.held) : 0);
     const dayRange = (w) => { const e = new Date(w.start + "T00:00:00Z"); e.setUTCDate(e.getUTCDate() + 4); const f = ymd(e);
       return w.start.slice(5, 7) === f.slice(5, 7) ? `${+w.start.slice(8)}-${+f.slice(8)} ${MONTHS[+f.slice(5, 7) - 1]}` : `${shortDay(w.start)} - ${shortDay(f)}`; };
 
-    const W = Math.max(300, Math.min(1060, ($("main").clientWidth || 1000) - 34)), H = 260;
+    const W = Math.max(300, Math.min(1060, ($("main").clientWidth || 1000) - 34)), H = 290;
     const narrow = W < 560;
-    const L = 46, R = 54, T = 22, B = narrow ? 64 : 52, iw = W - L - R, ih = H - T - B;
-    const max = Math.max(4, ...weeks.map((w) => w.total));
+    const L = 46, R = 16, T = 44, B = narrow ? 56 : 46, iw = W - L - R, ih = H - T - B;
+    const max = Math.max(4, ...weeks.map((w) => w.held));
     const step = Math.ceil(max / 4 / (max > 40 ? 10 : 1)) * (max > 40 ? 10 : 1), top = step * 4;
-    const colW = iw / weeks.length, bw = Math.min(90, colW * 0.56);
+    const colW = iw / weeks.length, bw = Math.min(110, colW * 0.6);
     const x = (i) => L + colW * (i + 0.5);
     const y = (v) => T + ih - (v / top) * ih;
-    const yp = (p) => T + ih - (p / 100) * ih;
     let g = "";
     for (let k = 0; k <= 4; k++) {
       const v = step * k;
       g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>` +
-        `<text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${v}</text>` +
-        `<text x="${W - R + 6}" y="${y(v) + 4}" text-anchor="start" font-size="11" fill="var(--ink-3)">${k * 25}%</text>`;
+        `<text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${fmt(v)}</text>`;
     }
-    let cols = "";
+    const label = (cx, v, color, bold) => {
+      const yy = y(v);
+      return `<text x="${cx}" y="${yy - (narrow ? 24 : 12)}" text-anchor="middle" font-size="${narrow ? 10.5 : 12}" font-weight="${bold ? 700 : 600}" fill="${color}" stroke="var(--surface)" stroke-width="4" paint-order="stroke">${fmt(v)}${narrow ? "" : ` · ${pct(v, n)}%`}</text>` +
+        (narrow ? `<text x="${cx}" y="${yy - 10}" text-anchor="middle" font-size="9.5" fill="${color}" stroke="var(--surface)" stroke-width="4" paint-order="stroke">${pct(v, n)}%</text>` : "");
+    };
+    let cols = "", labs = "";
+    const trendPts = [];
     weeks.forEach((w, i) => {
-      const cx = x(i), yh = y(w.held), yt = y(w.total);
-      const n = i + 1 - off;
-      const tip = w.nodate ? [`Held, date not given`, `${w.held} schools held their competition but no date is in the tracker`, `Total: ${w.cum}% of schools`].join("|")
-        : [`Wk ${n} (${dayRange(w)})${w.future ? " - plan" : w.now ? " - this week" : ""}`,
-        w.held || !w.future ? `Held: ${w.held} schools` : "", w.plan ? `Still needed: ${w.plan} schools` : "", `Total by end of week: ${w.cum}% of schools`].filter(Boolean).join("|");
-      cols += `<g class="wk" tabindex="0" data-tip="${tip}" data-x="${cx}" data-y="${Math.min(yt, yp(w.cum))}">` +
+      const cx = x(i);
+      const hasExp = true, showHeld = !w.future;
+      const hx = cx;   // only the Held bar is drawn; Expected shows when the bar is tapped
+      const tipLines = [`Wk ${i + 1} (${dayRange(w)})${w.now ? " - this week" : w.future ? " - coming" : ""}`];
+      if (hasExp) tipLines.push(`Expected: ${fmt(w.exp)} schools (${pct(w.exp, n)}%)`);
+      if (showHeld) tipLines.push(`Held${w.now ? " so far" : ""}: ${fmt(w.held)} schools (${pct(w.held, n)}%)`);
+      const topY = showHeld ? y(w.held) : T + ih;
+      cols += `<g class="wk" tabindex="0" data-tip="${tipLines.join("|")}" data-x="${cx}" data-y="${topY}">` +
         `<rect class="hit" x="${cx - colW / 2}" y="${T}" width="${colW}" height="${ih}" fill="transparent"/>` +
-        (w.held ? `<rect x="${cx - bw / 2}" y="${yh}" width="${bw}" height="${T + ih - yh}" fill="var(--good)"/>` : "") +
-        (w.plan ? `<rect x="${cx - bw / 2}" y="${yt}" width="${bw}" height="${yh - yt}" fill="var(--good)" fill-opacity=".45"/>` : "") +
-        (w.total ? (T + ih - yt >= 24
-          ? `<text x="${cx}" y="${yt + 16}" text-anchor="middle" font-size="12" font-weight="700" fill="${w.plan ? "var(--ink)" : "#fff"}">${w.total}</text>`
-          : `<text x="${cx}" y="${yt - 6}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">${w.total}</text>`) : "") +
-        (w.nodate
-          ? `<text x="${cx}" y="${H - B + 18}" text-anchor="middle" font-size="${narrow ? 11 : 11.5}" font-weight="500" fill="var(--ink)">${narrow ? "No date" : "Held, date not given"}</text>`
-          : narrow
-          ? `<text x="${cx}" y="${H - B + 16}" text-anchor="middle" font-size="11" font-weight="${w.now ? 700 : 600}" fill="var(--ink)">Wk ${n}</text>` +
-            `<text x="${cx}" y="${H - B + 30}" text-anchor="middle" font-size="10" fill="var(--ink-2)">${dayRange(w)}</text>` +
-            `<text x="${cx}" y="${H - B + 44}" text-anchor="middle" font-size="10" font-weight="600" fill="${w.now ? "var(--brand)" : "var(--ink-3)"}">${w.now ? "This week" : w.future ? "Plan" : ""}</text>`
-          : `<text x="${cx}" y="${H - B + 18}" text-anchor="middle" font-size="11.5" font-weight="${w.now ? 700 : 500}" fill="var(--ink)">Wk ${n} (${dayRange(w)})${w.future ? " - plan" : ""}</text>` +
-            (w.now ? `<text x="${cx}" y="${H - B + 34}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--brand)">This week</text>` : "")) +
+        (showHeld ? `<rect x="${hx - bw / 2}" y="${y(w.held)}" width="${bw}" height="${T + ih - y(w.held)}" fill="var(--good)"/>` : "") +
+        `<text x="${cx}" y="${H - B + 17}" text-anchor="middle" font-size="${narrow ? 11 : 11.5}" font-weight="${w.now ? 700 : 500}" fill="var(--ink)">Wk ${i + 1}${narrow ? "" : ` (${dayRange(w)})`}</text>` +
+        (narrow ? `<text x="${cx}" y="${H - B + 31}" text-anchor="middle" font-size="10" fill="var(--ink-2)">${dayRange(w)}</text>` : "") +
+        (w.now ? `<text x="${cx}" y="${H - B + (narrow ? 45 : 33)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--brand)">This week</text>` : "") +
         `</g>`;
+      if (showHeld) labs += label(hx, w.held, "var(--good-ink)", true);
+      // trend: through the weeks that are over
+      if (!w.future && !w.now) trendPts.push([hx, y(w.held), false]);
     });
-    const path = weeks.map((w, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${yp(w.cum).toFixed(1)}`).join(" ");
-    const dots = weeks.map((w, i) => `<circle cx="${x(i)}" cy="${yp(w.cum)}" r="4" fill="var(--plan)" stroke="var(--surface)" stroke-width="2"/>`).join("");
-    const lastW = weeks[weeks.length - 1], lx = x(weeks.length - 1), ly = yp(lastW.cum);
-    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Schools completing the competition per week, with the cumulative share of schools">${g}${cols}` +
-      `<path d="${path}" fill="none" stroke="var(--plan)" stroke-width="2" pointer-events="none"/>${dots}` +
-      `<text x="${lx}" y="${ly - 9}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink-2)" pointer-events="none">${lastW.cum}%</text>` +
-      `<text transform="translate(11 ${T + ih / 2}) rotate(-90)" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">Schools per week</text>` +
-      `<text transform="translate(${W - 4} ${T + ih / 2}) rotate(90)" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">Cumulative % of schools</text></svg>`;
-    return `<div class="panel trend" id="trend"><div class="legend"><span><i class="box held"></i>Held (actual)</span><span><i class="box planned"></i>Still needed to finish by ${shortDay(S.CHART_TO)}</span><span><i class="cum"></i>Cumulative % of schools</span></div>${svg}` +
-      `<div class="note"><b>${fmt(held)}</b> of ${fmt(list.length)} schools have held their competition. ` +
-      (open.length ? `To finish by <b>${shortDay(S.CHART_TO)}</b>, the other <b>${fmt(left)}</b> need about <b>${fmt(perWeek)}</b> schools a week. So far ${fmt(withDate)} of them have set a date.`
-        : (left ? `<b>${fmt(left)}</b> schools did not hold it by ${shortDay(S.CHART_TO)}.` : "All schools are done.")) +
-      (undated ? ` <b>${fmt(undated)}</b> held schools have no date in the tracker, so they are shown in their own bar.` : "") +
-      (early ? ` Week 1 includes ${fmt(early)} held before ${shortDay(first)}.` : "") + `</div></div>`;
+    let trend = "";
+    for (let i = 1; i < trendPts.length; i++) {
+      const dash = trendPts[i][2] ? ` stroke-dasharray="6 4"` : "";
+      trend += `<line x1="${trendPts[i - 1][0]}" y1="${trendPts[i - 1][1]}" x2="${trendPts[i][0]}" y2="${trendPts[i][1]}" stroke="var(--brand)" stroke-width="2.5"${dash}/>`;
+    }
+    trend += trendPts.map((p) => `<circle cx="${p[0]}" cy="${p[1]}" r="4.5" fill="${p[2] ? "var(--surface)" : "var(--brand)"}" stroke="var(--brand)" stroke-width="2"/>`).join("");
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Schools expected and schools that held their competition, each week">${g}${cols}<g pointer-events="none">${trend}${labs}</g>` +
+      `<text transform="translate(11 ${T + ih / 2}) rotate(-90)" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">Schools</text></svg>`;
+    return `<div class="panel trend" id="trend"><div class="legend"><span><i class="box held"></i>Held</span><span><i class="trendl"></i>Trend</span><span class="hintl">Tap a bar to see what was expected</span></div>${svg}` +
+      `<div class="note"><b>${fmt(heldAll)}</b> of ${fmt(n)} schools have held their competition (<b>${pct(heldAll, n)}%</b>).` +
+      (cur ? ` To finish by ${shortDay(S.CHART_TO)}, this week we expect <b>${fmt(cur.exp)}</b> (${pct(cur.exp, n)}%); <b>${fmt(cur.held)}</b> have held it so far.` : "") +
+      ` Expected = the schools not yet done at the start of the week, shared equally over the weeks left until ${shortDay(S.CHART_TO)}.` +
+      (noForm ? ` ${fmt(noForm)} schools are marked as held but have no competition form yet, so they are not in a week.` : "") + `</div></div>`;
   }
+
   // tooltip for the weekly chart (hover on computer, tap on phone)
   function trendTip(e) {
     const g = e.target.closest && e.target.closest(".wk"), box = $("trend");
@@ -740,7 +733,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         `<div class="panel"><div class="school-card">` +
         row2("Held a school competition", yesNo(s.comp, "Not yet done")) +
         row2(`Reached ${T} students`, s.met40 ? `<span class="yes">Yes</span>` : `<span class="notyet">Not yet</span>`) +
-        row2("Competition date", dateText(s)) +
+        row2("Planned date", dateText(s)) +
         row2("Total students", fmt(s.students)) +
         row2(`S5 / S6 (target ${E} each)`, `${fmt(s.s5)} / ${fmt(s.s6)}`) +
         `</div></div>`;
@@ -751,9 +744,10 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       bigKpi(`Schools with at least ${T} students`, fmt(met), fmt(n), pct(met, n), "target") +
       bigKpi("Total students", fmt(st)) +
       `</div>`;
-    const dateCell = (s) => `<td data-label="Competition date">${dateText(s)}</td>`;
+    const dateCell = (s) => `<td data-label="Planned date">${dateText(s)}</td>`;
+    const heldCell = (s) => `<td data-label="Competition">${heldText(s)}</td>`;
     // weekly chart only above sector level (a sector has too few schools for a trend)
-    if (!state.sector) h += `<h2 class="section-title">School competition: weekly completion projection</h2><p class="section-note">Projection to the ${shortDay(S.CHART_TO)} deadline. Dark green bars are schools that held their competition that week. Light green is how many more schools must hold it each week, this week included, to finish on time. The grey line shows the share of all schools done by the end of each week.</p>` + weeklyChart(list);
+    if (!state.sector) h += `<h2 class="section-title">School competitions per week</h2><p class="section-note">Each bar is the number of schools that held their competition that week, from the date on their competition form, with its % of all schools. Tap or point at a bar to see how many were expected that week: the schools still left at the start of the week, shared equally over the weeks left until ${shortDay(S.CHART_TO)}. The blue line shows the trend.</p>` + weeklyChart(list);
 
     const child = childLevel();
     const lvl = LEVEL_NAME[child].toLowerCase();
@@ -762,10 +756,10 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
     if (child === "school") {
       h += `<h2 class="section-title">Schools in ${esc(state.sector)} sector</h2><p class="section-note">Fewest students first. Tap a school for details.</p>`;
       const rows = list.slice().sort((a, b) => a.students - b.students || a.school.localeCompare(b.school)).map((s) =>
-        `<tr ${drillAttr("school", s.school, s)}><td class="first"><span class="go">${esc(s.school)}</span></td>${dateCell(s)}` +
+        `<tr ${drillAttr("school", s.school, s)}><td class="first"><span class="go">${esc(s.school)}</span></td>${heldCell(s)}${dateCell(s)}` +
         `<td class="n" data-label="Total students">${fmt(s.students)}</td><td data-label="${T}+ students">${yes40(s)}</td></tr>`);
       const L = limitRows(listKey("schools"), rows, S.SCHOOL_LIST_LIMIT);
-      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>School</th><th>Competition date</th><th class="n">Total students</th><th>${T}+ students</th></tr></thead><tbody>${L.html}</tbody></table></div>${L.more}</div>`;
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>School</th><th>Competition</th><th>Planned date</th><th class="n">Total students</th><th>${T}+ students</th></tr></thead><tbody>${L.html}</tbody></table></div>${L.more}</div>`;
       return h;
     }
 
@@ -788,12 +782,12 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       `<th class="n">Total students</th></tr></thead><tbody>${L.html}${line("Total", list, "", "total")}</tbody></table></div>${L.more}</div>`;
 
     const sched = list.filter((s) => s.date).sort((a, b) => (dateKey(a.date) || "9999") .localeCompare(dateKey(b.date) || "9999") || a.school.localeCompare(b.school));
-    h += `<h2 class="section-title">Competition dates (${fmt(sched.length)} of ${fmt(n)} schools)</h2><p class="section-note">Schools that have set a date in the competition tracker, soonest first.</p>`;
+    h += `<h2 class="section-title">Planned competition dates (${fmt(sched.length)} of ${fmt(n)} schools)</h2><p class="section-note">Schools that have set a date in the competition tracker, soonest first.</p>`;
     if (!sched.length) h += `<div class="empty">No school here has set a competition date yet.</div>`;
     else {
-      const rows3 = sched.map((s) => `<tr ${drillAttr("school", s.school, s)}><td data-label="District">${esc(s.district)}</td><td data-label="Sector">${esc(s.sector)}</td><td class="first2" data-label="School"><span class="go">${esc(s.school)}</span></td>${dateCell(s)}</tr>`);
+      const rows3 = sched.map((s) => `<tr ${drillAttr("school", s.school, s)}><td data-label="District">${esc(s.district)}</td><td data-label="Sector">${esc(s.sector)}</td><td class="first2" data-label="School"><span class="go">${esc(s.school)}</span></td>${dateCell(s)}${heldCell(s)}</tr>`);
       const L3 = limitRows(listKey("dates"), rows3, S.SCHOOL_LIST_LIMIT);
-      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>District</th><th>Sector</th><th>School</th><th>Competition date</th></tr></thead><tbody>${L3.html}</tbody></table></div>${L3.more}</div>`;
+      h += `<div class="panel tight"><div class="table-scroll"><table class="data"><thead><tr><th>District</th><th>Sector</th><th>School</th><th>Planned date</th><th>Competition</th></tr></thead><tbody>${L3.html}</tbody></table></div>${L3.more}</div>`;
     }
 
     h += `<h2 class="section-title">Schools that held a competition (${fmt(held.length)})</h2><p class="section-note">Fewest students first.</p>`;
@@ -905,7 +899,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
       const records = [];
       districts.forEach((d) => (d.rows || []).forEach((r) => records.push({
         province: d.province, district: d.district, sector: r[0], school: r[1], comp: r[2], s5: r[3], s6: r[4], students: r[5],
-        downloaded: r[6], dos: r[7], tTotal: r[8], tAll: r[9], tSome: r[10], tNone: r[11], date: r[12] || "", actual: r[13] || "", sbt: r[14] || 0
+        downloaded: r[6], dos: r[7], tTotal: r[8], tAll: r[9], tSome: r[10], tNone: r[11], date: r[12] || "", actual: r[13] || "", sbt: r[14] || 0, form: r[15] || ""
       })));
       if (!records.length) {
         $("updated").textContent = "No data yet";
@@ -914,6 +908,8 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         return;
       }
       setData(records, meta.updatedAt, "Data updated:");
+      // data saved before the competition form column existed: refresh it once from the Google Sheet
+      if (canSync && !autoTried && records.every((r) => !r.form)) { autoTried = true; sync(); }
     };
     db.collection("districts").onSnapshot((snap) => { districts = snap.docs.map((d) => d.data()); apply(); },
       () => showMessage("The data could not be read right now. Reload the page to try again."));
@@ -937,7 +933,7 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
         records.forEach((s) => {
           const key = s.province + "|" + s.district;
           if (!byDistrict.has(key)) byDistrict.set(key, { province: s.province, district: s.district, rows: [] });
-          byDistrict.get(key).rows.push([s.sector, s.school, s.comp, s.s5, s.s6, s.students, s.downloaded, s.dos, s.tTotal, s.tAll, s.tSome, s.tNone, s.date, s.actual, s.sbt]);
+          byDistrict.get(key).rows.push([s.sector, s.school, s.comp, s.s5, s.s6, s.students, s.downloaded, s.dos, s.tTotal, s.tAll, s.tSome, s.tNone, s.date, s.actual, s.sbt, s.form]);
         });
         const idOf = (k) => k.replace(/[^A-Za-z0-9_.~:@+-]/g, "_").slice(0, 120);
         const keep = new Set();
@@ -975,5 +971,6 @@ footer { color: var(--ink-3); font-size: 13px; padding-block: 0 32px; }
   else { loadCSV(true); if (S.AUTO_REFRESH_MINUTES > 0) setInterval(() => loadCSV(false), S.AUTO_REFRESH_MINUTES * 60000); }
 })();
 </script>
+
 </body>
 </html>
