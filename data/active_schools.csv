@@ -241,14 +241,14 @@ East,Kirehe,Nyamugari,GS PAYSANNAT G,1,0,17,17,Yes,Yes,1,1,,0,,,Yes
 East,Kirehe,Nyamugari,GS RUSUMO,1,36,69,105,Yes,Yes,3,3,,0,,,Yes
 East,Kirehe,Nyarubuye,GS MIGONGO / TSS,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
 East,Kirehe,Nyarubuye,GS  NYABITARE,0,0,0,0,Yes,Yes,2,1,1,0,,,Yes
-East,Kirehe,Nyarubuye,ES NYARUBUYE,0,0,0,0,Yes,Yes,6,6,,0,,,Yes
+East,Kirehe,Nyarubuye,ES NYARUBUYE,1,20,21,41,Yes,Yes,6,6,,0,,,Yes
 East,Kirehe,Mahama,G.S  PAYSANNAT L E,1,21,20,41,Yes,Yes,5,5,,0,,,Yes
 East,Nyagatare,Gatunda,GS MUKAMA,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Gatunda,GS MUTUMBA,0,0,0,0,Yes,Yes,5,5,,0,,,Yes
 East,Nyagatare,Gatunda,GS RWEBARE,0,0,0,0,Yes,Yes,7,7,,0,,,Yes
 East,Nyagatare,Gatunda,G S KARAMBI,0,0,0,0,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Karama,GS GIKAGATI,1,18,25,43,Yes,Yes,5,5,,0,,,Yes
-East,Nyagatare,Karama,GS BUSHARA,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
+East,Nyagatare,Karama,GS BUSHARA,1,6,8,14,Yes,Yes,2,2,,0,,,Yes
 East,Nyagatare,Karangazi,GS RYABEGA / TSS,1,13,13,26,Yes,Yes,1,1,,0,,,Yes
 East,Nyagatare,Karangazi,GS SHIMWAPAUL,1,2,1,3,Yes,Yes,3,3,,0,,,Yes
 East,Nyagatare,Karangazi,GS Rwabiharamba,1,3,3,6,Yes,Yes,1,1,,0,,,Yes
@@ -278,9 +278,9 @@ East,Nyagatare,Nyagatare,NYAGATARE S.S,1,7,8,15,Yes,Yes,7,7,,0,,,Yes
 East,Nyagatare,Nyagatare,G.S CYONYO,1,5,17,22,Yes,Yes,5,5,,0,,,Yes
 East,Nyagatare,Nyagatare,G.S NYAGATARE,1,20,20,40,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Nyagatare,MARYHILL GIRLS' SECONDARY SCHOOL,1,6,4,10,Yes,Yes,7,7,,0,,,Yes
-East,Nyagatare,Rukomo,G.S RUKOMO,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
-East,Nyagatare,Rukomo,E.S RUKOMO (SO.P.E.M),0,0,0,0,Yes,Yes,11,11,,0,,,Yes
-East,Nyagatare,Rukomo,G.S RURENGE,0,0,0,0,Yes,Yes,6,6,,0,,,Yes
+East,Nyagatare,Rukomo,G.S RUKOMO,1,7,13,20,Yes,Yes,1,1,,0,,,Yes
+East,Nyagatare,Rukomo,E.S RUKOMO (SO.P.E.M),1,20,29,49,Yes,Yes,11,11,,0,,,Yes
+East,Nyagatare,Rukomo,G.S RURENGE,1,17,17,34,Yes,Yes,6,6,,0,,,Yes
 East,Nyagatare,Rwempasha,G.S RWEMPASHA,1,3,3,6,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Rwempasha,G.S NYENDO,1,6,6,12,Yes,Yes,4,4,,0,,,Yes
 East,Nyagatare,Rwempasha,G.S BWEYA,1,3,3,6,Yes,Yes,4,4,,0,,,Yes
@@ -461,7 +461,7 @@ West,Nyamasheke,Gihombo,GS NYAKANYINYA,0,0,0,0,Yes,Yes,2,2,,0,,,Yes
 West,Nyamasheke,Gihombo,GS GITSIMBWE,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
 West,Nyamasheke,Kagano,GS GITWA,1,27,22,49,Yes,Yes,1,1,,0,,,Yes
 West,Nyamasheke,Kagano,GS SHARA,1,7,13,20,Yes,Yes,1,1,,0,,,Yes
-West,Nyamasheke,Kagano,GS NYAMASHEKE A,0,0,0,0,Yes,Yes,6,6,,0,,,Yes
+West,Nyamasheke,Kagano,GS NYAMASHEKE A,1,12,8,20,Yes,Yes,6,6,,0,,,Yes
 West,Nyamasheke,Kagano,GS ST JOSEPH NYAMASHEKE,1,20,20,40,Yes,Yes,10,10,,0,,,Yes
 West,Nyamasheke,Kagano,ISF NYAMASHEKE,1,15,9,24,Yes,Yes,7,7,,0,,,Yes
 West,Nyamasheke,Kanjongo,GS MURAZA,0,0,0,0,No,Yes,1,1,,0,,,No
@@ -535,7 +535,7 @@ East,Bugesera,Kamabuye,GS Nyakayaga,1,11,22,33,Yes,Yes,6,6,,0,,,Yes
 East,Bugesera,Mareba,GS RANGO,0,0,0,0,Yes,Yes,3,3,,0,,,Yes
 East,Bugesera,Mareba,GS MAREBA,0,0,0,0,Yes,Yes,1,1,,0,,,Yes
 East,Bugesera,Mayange,GS MAYANGE A,0,0,0,0,Yes,Yes,5,5,,0,2026-11-03,,Yes
-East,Bugesera,Mayange,ECOLE SECONDAIRE KAMABUYE,0,0,0,0,Yes,Yes,2,2,,0,2026-11-02,,Yes
+East,Bugesera,Mayange,ECOLE SECONDAIRE KAMABUYE,1,20,20,40,Yes,Yes,2,2,,0,2026-11-02,,Yes
 East,Bugesera,Mayange,Gs Kamabuye,1,11,8,19,Yes,Yes,3,3,,0,2026-10-04,,Yes
 East,Bugesera,Musenyi,GS MUSENYI / TSS,1,5,7,12,Yes,Yes,1,1,,0,,,Yes
 East,Bugesera,Mwogo,GS KAGASA MWOGO / TSS,1,3,2,5,Yes,Yes,2,2,,0,,,Yes
