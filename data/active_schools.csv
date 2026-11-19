@@ -118,7 +118,7 @@ West,Ngororero,Sovu,G.S MAHEMBE,1,3,3,6,Yes,Yes,6,6,,0,2026-10-22,,Yes,2026-11-1
 West,Rubavu,Bugeshi,G.S BURINGO,1,15,23,38,Yes,Yes,2,2,,0,,,Yes,2026-11-09
 West,Rubavu,Bugeshi,G.S BIHE / TSS,1,6,6,12,Yes,Yes,4,4,,0,,,Yes,2026-11-09
 West,Rubavu,Busasamana,G.S BUSASAMANA II / TSS,1,20,20,40,Yes,Yes,2,2,,0,,,Yes,2026-11-18
-West,Rubavu,Busasamana,G.S BUHENGERI,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
+West,Rubavu,Busasamana,G.S BUHENGERI,1,5,11,16,Yes,Yes,4,4,,0,,,Yes,2026-11-19
 West,Rubavu,Busasamana,GS SAINT MATHIEU DE BUSASAMANA,1,14,8,22,Yes,Yes,9,9,,0,,,Yes,2026-11-17
 West,Rubavu,Cyanzarwe,G.S RWANZEKUMA,0,0,0,0,Yes,Yes,6,6,,0,,,Yes,
 West,Rubavu,Gisenyi,G.S GACUBA 2A,1,3,3,6,Yes,Yes,2,2,,0,,,Yes,2026-10-30
@@ -134,15 +134,15 @@ West,Rubavu,Kanzenze,G.S MUTURA I,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
 West,Rubavu,Kanzenze,G.S KANZENZE,0,0,0,0,Yes,No,1,1,,0,,,Yes,
 West,Rubavu,Mudende,G.S MUGONGO,1,16,26,42,Yes,Yes,6,6,,0,,,Yes,2026-11-04
 West,Rubavu,Nyakiriba,G.S NYAKILIBA,1,20,21,41,Yes,Yes,3,3,,0,,,Yes,2026-11-12
-West,Rubavu,Nyamyumba,G.S RAMBO,0,0,0,0,Yes,Yes,5,3,2,0,,,Yes,
-West,Rubavu,Nyamyumba,G.S BUSORO,0,0,0,0,Yes,No,3,1,0,2,,,Yes,
-West,Rubavu,Nyamyumba,G.S BWITEREKE,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
+West,Rubavu,Nyamyumba,G.S RAMBO,1,10,13,23,Yes,Yes,5,3,2,0,,,Yes,2026-11-16
+West,Rubavu,Nyamyumba,G.S BUSORO,1,5,4,9,Yes,No,3,1,0,2,,,Yes,2026-11-16
+West,Rubavu,Nyamyumba,G.S BWITEREKE,1,17,58,75,Yes,Yes,4,4,,0,,,Yes,2026-11-13
 West,Rubavu,Nyundo,G.S MUKONDO,1,4,4,8,Yes,Yes,1,1,,0,,,Yes,2026-11-16
 West,Rubavu,Nyundo,PETIT SEMINAIRE SAINT PIE X DE NYUNDO,1,17,3,20,Yes,Yes,6,6,,0,,,Yes,2026-11-13
 West,Rubavu,Nyundo,G.S NDA NYUNDO,1,10,9,19,Yes,Yes,9,9,,0,,,Yes,2026-11-12
 West,Rubavu,Rubavu,G.S KANEMBWE I,1,20,20,40,Yes,Yes,2,2,,0,,,Yes,2026-11-02
-West,Rubavu,Rugerero,COLLEGE DE GISENYI INYEMERAMIHIGO,0,0,0,0,Yes,Yes,12,12,,0,,,Yes,
-West,Rubavu,Rugerero,G.S SHWEMU,0,0,0,0,Yes,Yes,7,7,,0,,,Yes,
+West,Rubavu,Rugerero,COLLEGE DE GISENYI INYEMERAMIHIGO,1,20,20,40,Yes,Yes,12,12,,0,,,Yes,2026-11-18
+West,Rubavu,Rugerero,G.S SHWEMU,1,20,18,38,Yes,Yes,7,7,,0,,,Yes,2026-11-17
 West,Rubavu,Gisenyi,GS Umubano ll,1,7,19,26,Yes,Yes,6,6,,0,,,Yes,2026-11-17
 West,Rutsiro,Boneza,GS BUGARURA,1,17,17,34,Yes,Yes,1,1,,0,,,Yes,2026-10-28
 West,Rutsiro,Boneza,GS KIGARAMA,1,6,6,12,Yes,Yes,4,4,,0,,,Yes,2026-10-29
@@ -160,14 +160,14 @@ West,Rutsiro,Murunda,GS MURUNDA,1,20,20,40,Yes,Yes,3,3,,0,,,Yes,2026-11-11
 West,Rutsiro,Murunda,ES Murunda,1,20,20,40,Yes,Yes,10,10,,0,,,Yes,2026-11-11
 West,Rutsiro,Musasa,GS MURAMA,1,6,25,31,Yes,Yes,2,2,,0,,,Yes,2026-11-12
 West,Rutsiro,Musasa,GS SYIKI,1,13,18,31,Yes,Yes,4,4,,0,,,Yes,2026-11-11
-West,Rutsiro,Mushonyi,ES APAKAPE,0,0,0,0,Yes,Yes,8,8,,0,,,Yes,
+West,Rutsiro,Mushonyi,ES APAKAPE,1,11,10,21,Yes,Yes,8,8,,0,,,Yes,2026-11-18
 West,Rutsiro,Mushonyi,GS RUGARAGARA,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
 West,Rutsiro,Mushonyi,GS VUMBI,1,6,7,13,Yes,Yes,4,4,,0,,,Yes,2026-11-05
-West,Rutsiro,Mushubati,GS MUSHUBATI,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
+West,Rutsiro,Mushubati,GS MUSHUBATI,1,5,6,11,Yes,Yes,4,4,,0,,,Yes,2026-11-13
 West,Rutsiro,Nyabirasi,ES NYABIRASI,1,3,3,6,Yes,Yes,2,2,,0,,,Yes,2026-11-10
 West,Rutsiro,Nyabirasi,GS NYABIRASI / TSS,1,3,3,6,Yes,Yes,2,2,,0,,,Yes,2026-11-13
 West,Rutsiro,Ruhango,GS KAVUMU,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
-West,Rutsiro,Ruhango,GS BITENGA B,0,0,0,0,Yes,Yes,1,1,,0,,,Yes,
+West,Rutsiro,Ruhango,GS BITENGA B,1,3,3,6,Yes,Yes,1,1,,0,,,Yes,2026-11-17
 West,Rutsiro,Rusebeya,G.S.KIGAMBA,1,0,25,25,Yes,Yes,4,4,,0,,,Yes,2026-11-04
 East,Gatsibo,Gasange,ECOLE SECONDAIRE GASANGE,1,7,8,15,Yes,Yes,4,4,,0,,,Yes,2026-11-05
 East,Gatsibo,Gasange,GROUPE SCOLAIRE GASANGE,1,4,11,15,Yes,Yes,2,2,,0,,,Yes,2026-11-10
@@ -192,7 +192,7 @@ East,Gatsibo,Kiziguro,KIZIGURO S.S,1,26,19,45,Yes,Yes,13,13,,0,,,Yes,2026-11-04
 East,Gatsibo,Kiziguro,G.S RUBONA,1,11,11,22,Yes,Yes,4,0,4,0,,,Yes,2026-11-04
 East,Gatsibo,Muhura,G S Mamfu Cath,1,7,20,27,Yes,Yes,2,2,,0,,,Yes,2026-11-10
 East,Gatsibo,Muhura,GS Bibare/Muhura,1,3,5,8,Yes,Yes,2,2,,0,,,Yes,2026-11-04
-East,Gatsibo,Muhura,GS Muhura  Taba,1,4,3,7,Yes,Yes,1,1,,0,,,Yes,2026-11-11
+East,Gatsibo,Muhura,GS Muhura  Taba,1,4,3,7,Yes,Yes,1,1,,0,,,Yes,2026-11-03
 East,Gatsibo,Muhura,GS MUHURA,1,19,4,23,Yes,Yes,10,10,,0,,,Yes,2026-11-06
 East,Gatsibo,Murambi,GS Murambi I,0,0,0,0,Yes,Yes,1,1,,0,,,Yes,
 East,Gatsibo,Ngarama,APEM  NGARAMA,1,19,12,31,Yes,Yes,4,4,,0,,,Yes,2026-11-11
@@ -212,16 +212,16 @@ East,Kirehe,Gahara,GS GAHARA / TSS,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
 East,Kirehe,Gahara,GS MUGOGO,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
 East,Kirehe,Gahara,GS MUHERO,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
 East,Kirehe,Gatore,GS CURAZO,1,20,22,42,Yes,Yes,1,1,,0,,,Yes,2026-11-05
-East,Kirehe,Gatore,GS GATORE,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
+East,Kirehe,Gatore,GS GATORE,1,8,6,14,Yes,Yes,2,2,,0,,,Yes,2026-11-19
 East,Kirehe,Gatore,GS RWANTONDE,1,6,0,6,Yes,Yes,2,2,,0,,,Yes,2026-11-17
 East,Kirehe,Kigarama,KIGARAMA,1,5,7,12,Yes,Yes,2,2,,0,,,Yes,2026-11-05
 East,Kirehe,Kigina,Rusumo High School,1,20,19,39,Yes,Yes,11,11,,0,,,Yes,2026-11-12
 East,Kirehe,Kigina,GS RUGARAMA II,1,7,6,13,Yes,Yes,1,1,,0,,,Yes,2026-11-05
 East,Kirehe,Kigina,G.S Kigina,1,16,19,35,Yes,Yes,2,2,,0,,,Yes,2026-11-03
 East,Kirehe,Kirehe,GS KIREHE,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
-East,Kirehe,Kirehe,GS NYABIGEGA,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
+East,Kirehe,Kirehe,GS NYABIGEGA,1,4,8,12,Yes,Yes,3,3,,0,,,Yes,2026-11-17
 East,Kirehe,Kirehe,GS NYAKARAMBI,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
-East,Kirehe,Kirehe,ES RUSUMO,0,0,0,0,Yes,Yes,8,8,,0,,,Yes,
+East,Kirehe,Kirehe,ES RUSUMO,1,20,20,40,Yes,Yes,8,8,,0,,,Yes,2026-11-18
 East,Kirehe,Mahama,G.S  PAYSANNAT LC,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
 East,Kirehe,Mahama,GS PAYSANNAT LA,1,25,25,50,Yes,Yes,3,3,,0,,,Yes,2026-11-10
 East,Kirehe,Mahama,G.S  PAYSANNAT L B,1,10,6,16,Yes,Yes,4,4,,0,,,Yes,2026-11-09
@@ -244,7 +244,7 @@ East,Kirehe,Nyarubuye,GS  NYABITARE,0,0,0,0,Yes,Yes,2,1,1,0,,,Yes,
 East,Kirehe,Nyarubuye,ES NYARUBUYE,1,20,21,41,Yes,Yes,6,6,,0,,,Yes,2026-11-12
 East,Kirehe,Mahama,G.S  PAYSANNAT L E,1,21,20,41,Yes,Yes,5,5,,0,,,Yes,2026-11-10
 East,Nyagatare,Gatunda,GS MUKAMA,1,3,3,6,Yes,Yes,4,4,,0,,,Yes,2026-11-10
-East,Nyagatare,Gatunda,GS MUTUMBA,0,0,0,0,Yes,Yes,5,5,,0,,,Yes,
+East,Nyagatare,Gatunda,GS MUTUMBA,1,3,3,6,Yes,Yes,5,5,,0,,,Yes,2026-11-09
 East,Nyagatare,Gatunda,GS RWEBARE,1,3,3,6,Yes,Yes,7,7,,0,,,Yes,2026-11-11
 East,Nyagatare,Gatunda,G S KARAMBI,1,3,3,6,Yes,Yes,4,4,,0,,,Yes,2026-11-12
 East,Nyagatare,Karama,GS GIKAGATI,1,18,25,43,Yes,Yes,5,5,,0,,,Yes,2026-11-12
@@ -363,7 +363,7 @@ North,Gicumbi,Rushaki,E S KAMUTORA,1,7,5,12,Yes,Yes,2,2,,0,,,Yes,2026-11-11
 North,Gicumbi,Rushaki,COLLEGE DE RUSHAKI,1,60,88,148,Yes,Yes,6,6,,0,,,Yes,2026-11-11
 North,Gicumbi,Rutare,G S KIRWA,1,20,20,40,Yes,Yes,3,3,,0,,,Yes,2026-11-11
 North,Gicumbi,Ruvune,COLLEGE DE REBERO,1,10,3,13,Yes,Yes,1,1,,0,,,Yes,2026-11-13
-North,Gicumbi,Ruvune,GS RUHONDO,0,0,0,0,Yes,Yes,4,1,1,2,,,Yes,
+North,Gicumbi,Ruvune,GS RUHONDO,1,30,35,65,Yes,Yes,4,1,1,2,,,Yes,2026-11-19
 North,Gicumbi,Ruvune,GS REBERO / TSS,1,10,12,22,Yes,Yes,1,1,,0,,,Yes,2026-11-13
 North,Gicumbi,Rwamiko,GS RWAMIKO,1,4,24,28,Yes,Yes,4,4,,0,,,Yes,2026-11-09
 North,Gicumbi,Shangasha,SHANGASHA,1,8,12,20,Yes,Yes,6,6,,0,,,Yes,2026-11-10
@@ -413,7 +413,7 @@ West,Karongi,Gashari,GS SAINT JOSEPH BIRAMBO,1,3,3,6,Yes,Yes,12,12,,0,,,Yes,2026
 West,Karongi,Gishyita,GS GISHYITA,1,14,14,28,Yes,Yes,3,3,,0,,,Yes,2026-11-18
 West,Karongi,Gishyita,GS SHYA,0,0,0,0,Yes,Yes,1,1,,0,,,Yes,
 West,Karongi,Gishyita,GS BUHORO,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
-West,Karongi,Gishyita,ES BISESERO,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
+West,Karongi,Gishyita,ES BISESERO,1,7,5,12,Yes,Yes,4,4,,0,,,Yes,2026-11-19
 West,Karongi,Gishyita,GS GATABA,1,6,5,11,Yes,Yes,2,2,,0,,,Yes,2026-11-19
 West,Karongi,Gitesi,GS BUREGA,1,6,10,16,Yes,Yes,4,2,2,0,,,Yes,2026-11-06
 West,Karongi,Gitesi,GS GITEGA,1,19,19,38,Yes,Yes,3,3,,0,,,Yes,2026-11-03
@@ -423,7 +423,7 @@ West,Karongi,Mubuga,ES MUBUGA,1,9,5,14,Yes,Yes,9,9,,0,,,Yes,2026-11-06
 West,Karongi,Mubuga,GS ST MICHEL DE MUBUGA,1,25,25,50,Yes,Yes,6,6,,0,,,Yes,2026-11-12
 West,Karongi,Mubuga,GS MWEYA,1,2,10,12,Yes,Yes,6,6,,0,,,Yes,2026-11-12
 West,Karongi,Mubuga,GS CYINAMA / TSS,1,11,13,24,Yes,Yes,1,1,,0,,,Yes,2026-11-06
-West,Karongi,Murambi,GS MUHORORO,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
+West,Karongi,Murambi,GS MUHORORO,1,20,20,40,Yes,Yes,2,2,,0,,,Yes,2026-11-13
 West,Karongi,Murambi,GS KIRINDA,1,13,17,30,Yes,Yes,2,2,,0,,,Yes,2026-11-13
 West,Karongi,Murambi,ES KIRINDA,1,20,20,40,Yes,Yes,7,7,,0,,,Yes,2026-11-04
 West,Karongi,Murambi,GS MUBUGA,1,2,10,12,Yes,Yes,3,3,,0,,,Yes,2026-11-13
@@ -444,11 +444,11 @@ West,Karongi,Rugabano,ES NGOMA / TSS,1,13,12,25,Yes,Yes,1,1,,0,,,Yes,2026-11-10
 West,Karongi,Ruganda,GS BIGUHU A,1,16,20,36,Yes,Yes,5,5,,0,,,Yes,2026-11-12
 West,Karongi,Ruganda,ES RUGANDA,1,20,16,36,Yes,Yes,2,2,,0,,,Yes,2026-11-18
 West,Karongi,Ruganda,GS NYABIKERI,1,3,3,6,Yes,Yes,2,2,,0,,,Yes,2026-11-16
-West,Karongi,Ruganda,GS KIBARI,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
+West,Karongi,Ruganda,GS KIBARI,1,13,10,23,Yes,Yes,2,2,,0,,,Yes,2026-11-19
 West,Karongi,Rwankuba,GS BISESERO,1,5,5,10,Yes,Yes,4,4,,0,,,Yes,2026-11-10
 West,Karongi,Rwankuba,GS MUSANGO,1,20,20,40,Yes,Yes,3,3,,0,,,Yes,2026-11-09
 West,Karongi,Rwankuba,GS KARONGI,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
-West,Karongi,Rwankuba,GS  BIGUGU,1,5,5,10,Yes,Yes,2,2,,0,,,Yes,2026-11-13
+West,Karongi,Rwankuba,GS  BIGUGU,1,3,4,7,Yes,Yes,2,2,,0,,,Yes,2026-11-13
 West,Karongi,Rwankuba,COLLEGE AMAHORO KIZIBA,1,2,10,12,Yes,Yes,4,4,,0,,,Yes,2026-11-11
 West,Karongi,Twumba,GS NYARUTAGARA,1,21,25,46,Yes,Yes,1,1,,0,,,Yes,2026-11-12
 West,Karongi,Twumba,G.S MUNIGI,1,5,7,12,Yes,Yes,2,2,,0,,,Yes,2026-11-11
@@ -492,7 +492,7 @@ West,Nyamasheke,Shangi,GS NYAMUGALI,0,0,0,0,Yes,No,2,2,,0,,,Yes,
 West,Nyamasheke,Shangi,ES GAFUNZO,0,0,0,0,Yes,No,8,8,,0,,,Yes,
 West,Rusizi,Bugarama,GS KIBANGIRA,1,27,34,61,Yes,Yes,1,1,,0,,,Yes,2026-11-13
 West,Rusizi,Bugarama,G.S SAINT PAUL MUKO,1,14,9,23,Yes,Yes,6,6,,0,,,Yes,2026-11-12
-West,Rusizi,Butare,G.S.Muramba,0,0,0,0,Yes,No,1,1,,0,,,Yes,
+West,Rusizi,Butare,G.S.Muramba,1,0,8,8,Yes,No,1,1,,0,,,Yes,2026-11-19
 West,Rusizi,Butare,GS GASUMO,0,0,0,0,Yes,No,1,1,,0,,,Yes,
 West,Rusizi,Butare,GS NYABITIMBO/TSS,1,9,12,21,Yes,No,5,5,,0,,,Yes,2026-11-17
 West,Rusizi,Bweyeye,GS Bweyeye,1,5,3,8,Yes,Yes,2,2,,0,,,Yes,2026-11-09
@@ -560,13 +560,13 @@ East,Bugesera,Shyara,GS Gihinga,1,8,20,28,Yes,Yes,3,3,,0,,,Yes,2026-11-10
 Kigali,Gasabo,Bumbogo,ES BUMBOGO,1,20,22,42,Yes,Yes,9,9,,0,,,Yes,2026-11-13
 Kigali,Gasabo,Bumbogo,GS BUMBOGO,0,0,0,0,Yes,Yes,1,1,,0,,,Yes,
 Kigali,Gasabo,Gatsata,GS GIHOGWE,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
-Kigali,Gasabo,Gikomero,GS GIKOMERO,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
+Kigali,Gasabo,Gikomero,GS GIKOMERO,1,20,20,40,Yes,Yes,2,2,,0,,,Yes,2026-11-12
 Kigali,Gasabo,Gisozi,FAWE GIRLS SCHOOL,0,0,0,0,Yes,Yes,12,12,,0,,,Yes,
 Kigali,Gasabo,Gisozi,GS GISOZI I,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
 Kigali,Gasabo,Gisozi,GLORY ACADEMY,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
 Kigali,Gasabo,Jabana,GS JABANA,1,7,3,10,Yes,Yes,3,3,,0,,,Yes,2026-11-18
-Kigali,Gasabo,Jali,GIHOGWE SECONDARY SCHOOL,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
-Kigali,Gasabo,Kacyiru,GS KACYIRU II,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
+Kigali,Gasabo,Jali,GIHOGWE SECONDARY SCHOOL,1,3,3,6,Yes,Yes,2,2,,0,,,Yes,2026-11-19
+Kigali,Gasabo,Kacyiru,GS KACYIRU II,1,9,7,16,Yes,Yes,2,2,,0,,,Yes,2026-11-19
 Kigali,Gasabo,Kimihurura,GS RUGANDO / TSS,0,0,0,0,Yes,Yes,1,1,,0,,,Yes,
 Kigali,Gasabo,Kimihurura,IFAK,0,0,0,0,Yes,Yes,6,6,,0,,,Yes,
 Kigali,Gasabo,Kimironko,GS KIMIRONKO I,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
@@ -595,15 +595,15 @@ Kigali,Kicukiro,Kanombe,G.S REMERA PROTESTANT,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
 Kigali,Kicukiro,Kicukiro,G.S APADE,1,13,9,22,Yes,Yes,6,3,3,0,,,Yes,2026-11-12
 Kigali,Kicukiro,Kigarama,G.S KIMISANGE,1,20,19,39,Yes,Yes,2,2,,0,,,Yes,2026-11-13
 Kigali,Kicukiro,Kigarama,E S S H B RASHID,1,20,5,25,Yes,Yes,4,4,,0,,,Yes,2026-11-12
-Kigali,Kicukiro,Masaka,G.S MASAKA,0,0,0,0,Yes,Yes,6,6,,0,,,Yes,
-Kigali,Kicukiro,Masaka,GS RUSHESHE,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
-Kigali,Kicukiro,Masaka,STAR,0,0,0,0,Yes,Yes,5,5,,0,,,Yes,
+Kigali,Kicukiro,Masaka,G.S MASAKA,1,20,20,40,Yes,Yes,6,6,,0,,,Yes,2026-11-18
+Kigali,Kicukiro,Masaka,GS RUSHESHE,1,6,6,12,Yes,Yes,2,2,,0,,,Yes,2026-11-16
+Kigali,Kicukiro,Masaka,STAR,1,6,5,11,Yes,Yes,5,5,,0,,,Yes,2026-11-17
 Kigali,Kicukiro,Niboye,G.S KICUKIRO,1,20,20,40,Yes,Yes,9,5,3,1,,,Yes,2026-11-13
 Kigali,Kicukiro,Nyarugunga,G.S CAMP KANOMBE,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
 Kigali,Kicukiro,Nyarugunga,ES KANOMBE /EFOTEC,0,0,0,0,Yes,No,6,6,,0,,,Yes,
 Kigali,Nyarugenge,Kanyinya,GS KANYINYA,1,21,18,39,Yes,Yes,1,1,,0,,,Yes,2026-11-12
 Kigali,Nyarugenge,Kigali,GS KIGALI,1,1,6,7,Yes,Yes,7,7,,0,,,Yes,2026-11-12
-Kigali,Nyarugenge,Kimisagara,GS KIMISAGARA,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
+Kigali,Nyarugenge,Kimisagara,GS KIMISAGARA,1,0,22,22,Yes,Yes,2,2,,0,,,Yes,2026-11-12
 Kigali,Nyarugenge,Mageragere,GS BUREMA,0,0,0,0,Yes,Yes,3,2,1,0,,,Yes,
 Kigali,Nyarugenge,Mageragere,GS BUTAMWA,1,6,2,8,Yes,Yes,1,1,,0,,,Yes,2026-11-05
 Kigali,Nyarugenge,Mageragere,COLLEGE DE BUTAMWA,1,6,3,9,Yes,Yes,4,4,,0,,,Yes,2026-11-17
@@ -660,7 +660,7 @@ South,Muhanga,Cyeza,GS SHOLI,1,4,14,18,Yes,Yes,2,2,,0,,,Yes,2026-11-12
 South,Muhanga,Cyeza,ES ELENA GUERRA,1,8,6,14,Yes,Yes,6,6,,0,,,Yes,2026-11-13
 South,Muhanga,Kabacuzi,GS BUTARE,1,5,9,14,Yes,Yes,6,6,,0,,,Yes,2026-11-12
 South,Muhanga,Kabacuzi,GS BURAMBA,1,10,17,27,Yes,Yes,2,2,,0,,,Yes,2026-11-16
-South,Muhanga,Kabacuzi,GS KIBYIMBA,0,0,0,0,Yes,Yes,5,5,,0,,,Yes,
+South,Muhanga,Kabacuzi,GS KIBYIMBA,1,9,18,27,Yes,Yes,5,5,,0,,,Yes,2026-11-13
 South,Muhanga,Kibangu,GS  JURWE,1,22,25,47,Yes,Yes,1,1,,0,,,Yes,2026-11-13
 South,Muhanga,Kibangu,ES NYAKABANDA,1,14,6,20,Yes,Yes,3,3,,0,,,Yes,2026-11-11
 South,Muhanga,Kibangu,GS KIBANGU,1,8,8,16,Yes,Yes,3,3,,0,,,Yes,2026-11-10
@@ -673,12 +673,12 @@ South,Muhanga,Mushishiro,GS NYABITARE,1,8,4,12,Yes,Yes,3,3,,0,,,Yes,2026-11-18
 South,Muhanga,Nyabinoni,NGARU,0,0,0,0,Yes,No,1,1,,0,,,Yes,
 South,Muhanga,Nyabinoni,GS.SHAKI,1,0,12,12,Yes,Yes,1,1,,0,,,Yes,2026-11-18
 South,Muhanga,Nyamabuye,GS KABGAYI B,1,7,3,10,Yes,Yes,6,6,,0,,,Yes,2026-11-09
-South,Muhanga,Nyamabuye,PETIT SEMINAIRE SAINT LEON KABGAYI,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
+South,Muhanga,Nyamabuye,PETIT SEMINAIRE SAINT LEON KABGAYI,1,20,20,40,Yes,Yes,4,4,,0,,,Yes,2026-11-16
 South,Muhanga,Nyamabuye,COLLEGE STE MARIE REINE DE KABGAYI,0,0,0,0,Yes,Yes,5,5,,0,,,Yes,
 South,Muhanga,Nyamabuye,ESSFIH,1,0,20,20,Yes,Yes,3,3,,0,,,Yes,2026-11-10
 South,Muhanga,Nyamabuye,G.S.ST JOSEPH,0,0,0,0,Yes,Yes,11,11,,0,2026-11-02,,Yes,
 South,Muhanga,Nyamabuye,GS GITARAMA,0,0,0,0,Yes,Yes,7,7,,0,2026-10-30,,Yes,
-South,Muhanga,Nyamabuye,GAHOGO ADVENTIST ACADEMY,0,0,0,0,Yes,Yes,6,6,,0,2026-10-29,,Yes,
+South,Muhanga,Nyamabuye,GAHOGO ADVENTIST ACADEMY,1,1,4,5,Yes,Yes,6,6,,0,2026-10-29,,Yes,2026-11-19
 South,Muhanga,Nyarusange,GS CYICIRO,1,10,20,30,Yes,Yes,3,3,,0,2026-10-28,,Yes,2026-10-29
 South,Muhanga,Nyarusange,G.S GIKOMERO,1,0,19,19,Yes,Yes,1,1,,0,,,Yes,2026-10-29
 South,Muhanga,Nyarusange,GS NYARUSANGE,1,11,10,21,Yes,Yes,7,5,1,1,,,Yes,2026-11-03
@@ -694,7 +694,7 @@ South,Muhanga,Shyogwe,G.S.MUNYINYA,1,3,3,6,Yes,Yes,5,5,,0,,,Yes,2026-11-12
 South,Muhanga,Shyogwe,G.S.ST ETIENNE,1,3,3,6,Yes,Yes,8,8,,0,,,Yes,2026-11-13
 South,Muhanga,Shyogwe,G.S.SHYOGWE,1,20,20,40,Yes,Yes,9,9,,0,,,Yes,2026-11-13
 South,Ruhango,Bweramana,GS MURAMA,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
-South,Ruhango,Bweramana,ES MURAMA,0,0,0,0,Yes,Yes,8,8,,0,,,Yes,
+South,Ruhango,Bweramana,ES MURAMA,1,18,18,36,Yes,Yes,8,8,,0,,,Yes,2026-11-19
 South,Ruhango,Bweramana,GS Rubona,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
 South,Ruhango,Bweramana,ESAPAG,0,0,0,0,Yes,Yes,11,11,,0,,,Yes,
 South,Ruhango,Bweramana,COLLEGE ADV GITWE,0,0,0,0,Yes,Yes,10,10,,0,,,Yes,
@@ -739,7 +739,7 @@ South,Gisagara,Mukindo,E.S MAGI / TSS,1,16,20,36,Yes,Yes,6,6,,0,,,Yes,2026-10-30
 South,Gisagara,Musha,G.S ZIVU,1,25,25,50,Yes,Yes,1,1,,0,,,Yes,2026-11-13
 South,Gisagara,Musha,G.S RWATANO,1,6,6,12,Yes,Yes,2,2,,0,,,Yes,2026-11-12
 South,Gisagara,Ndora,G.S GISAGARA A,1,15,7,22,Yes,Yes,4,4,,0,,,Yes,2026-11-11
-South,Gisagara,Ndora,G.S ST PHILIPPE NERI DE GISAGARA,0,0,0,0,Yes,Yes,15,14,1,0,,,Yes,
+South,Gisagara,Ndora,G.S ST PHILIPPE NERI DE GISAGARA,1,17,25,42,Yes,Yes,15,14,1,0,,,Yes,2026-11-10
 South,Gisagara,Nyanza,E.S HIGIRO,0,0,0,0,Yes,Yes,6,6,,0,,,Yes,
 South,Gisagara,Save,COLLEGE IMMACULEE CONCEPTION/SAVE,1,3,5,8,Yes,Yes,5,5,,0,,,Yes,2026-11-13
 South,Gisagara,Save,G.S STE BERNADETTE SAVE,1,12,9,21,Yes,Yes,11,11,,0,,,Yes,2026-11-06
@@ -751,12 +751,12 @@ South,Huye,Karama,Gs Saint Boniface Karama / TSS,1,13,15,28,Yes,Yes,1,1,,0,2026-
 South,Huye,Kigoma,ECOLE SECONDAIRE MBOGO,1,5,5,10,Yes,Yes,3,3,,0,2026-11-03,,Yes,2026-11-06
 South,Huye,Kigoma,G.S. NYARUNYINYA SAINTE RITA,1,17,13,30,Yes,Yes,2,2,,0,2026-11-09,,Yes,2026-11-13
 South,Huye,Kigoma,GS GISHIHE / TSS,1,12,12,24,Yes,Yes,2,2,,0,2026-11-03,,Yes,2026-11-09
-South,Huye,Kinazi,Lycee de Rusatira,0,0,0,0,Yes,Yes,2,2,,0,2026-11-06,,Yes,
+South,Huye,Kinazi,Lycee de Rusatira,1,7,2,9,Yes,Yes,2,2,,0,2026-11-06,,Yes,2026-11-19
 South,Huye,Kinazi,GS KINAZI,1,18,6,24,Yes,Yes,3,3,,0,2026-11-05,,Yes,2026-11-13
 South,Huye,Maraba,G.S KABUYE,1,20,20,40,Yes,Yes,5,5,,0,2026-11-06,,Yes,2026-11-06
 South,Huye,Mbazi,ES MUTUNDA,1,20,20,40,Yes,Yes,2,2,,0,,,Yes,2026-11-12
 South,Huye,Mbazi,GS MWULIRE,1,20,20,40,Yes,Yes,3,3,,0,,,Yes,2026-11-11
-South,Huye,Mukura,GS MUBUMBANO,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
+South,Huye,Mukura,GS MUBUMBANO,1,6,21,27,Yes,Yes,2,2,,0,,,Yes,2026-11-19
 South,Huye,Mukura,GS NKUBI,1,15,16,31,Yes,Yes,3,1,2,0,,,Yes,2026-11-10
 South,Huye,Ngoma,G.SC.GATAGARA,0,0,0,0,Yes,Yes,6,6,,0,,,Yes,
 South,Huye,Ngoma,GS BUTARE CATHOLIQUE,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
@@ -767,7 +767,7 @@ South,Huye,Ngoma,ENDP KARUBANDA,0,0,0,0,Yes,Yes,9,9,,0,2026-11-13,,Yes,
 South,Huye,Ngoma,G.S.O  BUTARE,0,0,0,0,Yes,Yes,18,17,0,1,,,Yes,
 South,Huye,Ruhashya,GS RUGOGWE / TSS,1,20,20,40,Yes,Yes,4,4,,0,,,Yes,2026-11-13
 South,Huye,Rusatira,G.S BUHIMBA,1,74,60,134,Yes,Yes,3,2,1,0,,,Yes,2026-11-16
-South,Huye,Rusatira,GS GAFUMBA,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
+South,Huye,Rusatira,GS GAFUMBA,1,19,17,36,Yes,Yes,2,2,,0,,,Yes,2026-11-18
 South,Huye,Rusatira,Saint Mary's High School Kiruhura,1,24,13,37,Yes,Yes,11,11,,0,,,Yes,2026-11-17
 South,Huye,Rwaniro,GS KAMWAMBI,0,0,0,0,Yes,Yes,4,4,,0,2026-11-03,,Yes,
 South,Huye,Simbi,E.S.Saint Jean Bosco Simbi,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
@@ -821,7 +821,7 @@ South,Nyamagabe,Kamegeri,GS St JOSEPH KIZI,1,17,20,37,Yes,Yes,2,2,,0,,,Yes,2026-
 South,Nyamagabe,Kibirizi,G.S KIRARO P,0,0,0,0,Yes,Yes,6,6,,0,,,Yes,
 South,Nyamagabe,Kibumbwe,GROUPE SCOLAIRE KIBUMBWE,1,21,20,41,Yes,No,3,3,,0,,,Yes,2026-11-12
 South,Nyamagabe,Kibumbwe,GS KINYANA,1,0,12,12,Yes,No,2,2,,0,,,Yes,2026-11-05
-South,Nyamagabe,Kitabi,GS KITABI,0,0,0,0,Yes,No,2,2,,0,,,Yes,
+South,Nyamagabe,Kitabi,GS KITABI,1,0,41,41,Yes,No,2,2,,0,,,Yes,2026-11-19
 South,Nyamagabe,Kitabi,GS SHABA,1,11,20,31,Yes,No,3,2,1,0,,,Yes,2026-11-13
 South,Nyamagabe,Mbazi,G.S MBAZI,1,15,20,35,Yes,Yes,4,4,,0,,,Yes,2026-11-12
 South,Nyamagabe,Mbazi,GS NGARA,1,7,9,16,Yes,Yes,2,2,,0,2026-11-06,,Yes,2026-11-13
@@ -839,7 +839,7 @@ South,Nyamagabe,Uwinkingi,KIBYAGIRA,1,20,20,40,Yes,Yes,2,2,,0,,,Yes,2026-11-11
 South,Nyamagabe,Nkomane,GS Musaraba,1,9,16,25,Yes,Yes,2,2,,0,,,Yes,2026-11-11
 South,Nyaruguru,Busanze,GS MASIGA,1,7,28,35,Yes,No,2,2,,0,,,Yes,2026-11-17
 South,Nyaruguru,Busanze,GS MUSEBEYA  TSS,1,14,20,34,Yes,No,2,2,,0,,,Yes,2026-11-16
-South,Nyaruguru,Busanze,G.S RUNYOMBYI I,0,0,0,0,Yes,No,10,10,,0,,,Yes,
+South,Nyaruguru,Busanze,G.S RUNYOMBYI I,1,13,5,18,Yes,No,10,10,,0,,,Yes,2026-11-19
 South,Nyaruguru,Cyahinda,GS MUHAMBARA,1,16,24,40,Yes,Yes,2,2,,0,,,Yes,2026-11-13
 South,Nyaruguru,Cyahinda,GS ST LAURENT,1,20,20,40,Yes,Yes,6,6,,0,,,Yes,2026-11-12
 South,Nyaruguru,Kibeho,COLLEGE IMANZI,1,1,2,3,Yes,Yes,2,2,,0,,,Yes,2026-11-16
@@ -956,7 +956,7 @@ West,Nyabihu,Rurembo,GS RUREMBO,1,5,5,10,Yes,Yes,2,2,,0,,,Yes,2026-11-11
 West,Nyabihu,Shyira,G.S SHYIRA,0,0,0,0,Yes,Yes,5,5,,0,,,Yes,
 Kigali,Nyarugenge,Nyarugenge,ALHIDAYAT ISLAMIC INSTITUTE,1,10,17,27,Yes,Yes,1,1,,0,,,Yes,2026-11-06
 East,Gatsibo,Gitoki,Gs Kivuba ,1,16,21,37,Yes,Yes,3,3,,0,,,Yes,2026-11-10
-West,Karongi,Gishyita,Ngoma Adventist College of Health Sciences,0,0,0,0,,Yes,5,5,,0,,,,
+West,Karongi,Gishyita,Ngoma Adventist College of Health Sciences,1,8,1,9,,Yes,5,5,,0,,,,2026-11-19
 East,Kayonza,Kabare,G.S KIBURARA,0,0,0,0,,No,1,1,,0,,,,
 East,Gatsibo,Nyagihanga,GS Kagera,1,0,8,8,Yes,Yes,2,2,,0,,,Yes,2026-11-11
 South,Nyaruguru,Kibeho,Education Institute for Blind Children Kibeho,1,8,1,9,Yes,No,2,2,,0,,,Yes,2026-11-19
