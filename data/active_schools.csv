@@ -484,7 +484,7 @@ West,Nyamasheke,Nyabitekeri,GS BUHOKORO,0,0,0,0,Yes,No,5,5,,0,,,Yes,
 West,Nyamasheke,Rangiro,GS MPABE,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
 West,Nyamasheke,Rangiro,GS BANDA,0,0,0,0,Yes,Yes,1,1,,0,,,Yes,
 West,Nyamasheke,Rangiro,ES RANGIRO,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
-West,Nyamasheke,Ruharambuga,GS KAMONYI,0,0,0,0,Yes,Yes,3,1,2,0,,,Yes,
+West,Nyamasheke,Ruharambuga,GS KAMONYI,1,7,6,13,Yes,Yes,3,1,2,0,,,Yes,2026-11-13
 West,Nyamasheke,Ruharambuga,GS RWABIDEGE,1,18,18,36,Yes,No,1,1,,0,,,Yes,2026-11-11
 West,Nyamasheke,Ruharambuga,GS BIGUTU,1,0,4,4,Yes,No,1,1,,0,,,Yes,2026-11-10
 West,Nyamasheke,Shangi,ESSF SHANGI,0,0,0,0,Yes,No,12,12,,0,,,Yes,
@@ -695,8 +695,8 @@ South,Muhanga,Shyogwe,G.S.ST ETIENNE,1,3,3,6,Yes,Yes,8,8,,0,,,Yes,2026-11-13
 South,Muhanga,Shyogwe,G.S.SHYOGWE,1,20,20,40,Yes,Yes,9,9,,0,,,Yes,2026-11-13
 South,Ruhango,Bweramana,GS MURAMA,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
 South,Ruhango,Bweramana,ES MURAMA,1,18,18,36,Yes,Yes,8,8,,0,,,Yes,2026-11-19
-South,Ruhango,Bweramana,GS Rubona,0,0,0,0,Yes,Yes,4,4,,0,,,Yes,
-South,Ruhango,Bweramana,ESAPAG,0,0,0,0,Yes,Yes,11,11,,0,,,Yes,
+South,Ruhango,Bweramana,GS Rubona,1,23,23,46,Yes,Yes,4,4,,0,,,Yes,2026-11-20
+South,Ruhango,Bweramana,ESAPAG,1,16,12,28,Yes,Yes,11,11,,0,,,Yes,2026-11-20
 South,Ruhango,Bweramana,COLLEGE ADV GITWE,0,0,0,0,Yes,Yes,10,10,,0,,,Yes,
 South,Ruhango,Byimana,GS BUKOMERO,1,20,22,42,Yes,Yes,4,4,,0,,,Yes,2026-11-09
 South,Ruhango,Byimana,ES MUKINGI,1,20,20,40,Yes,Yes,2,2,,0,,,Yes,2026-11-11
@@ -732,7 +732,7 @@ South,Gisagara,Mamba,E.S GAKOMA,1,0,20,20,Yes,Yes,3,2,1,0,,,Yes,2026-10-26
 South,Gisagara,Mamba,E.S MAMBA,1,20,20,40,Yes,Yes,5,5,,0,,,Yes,2026-10-27
 South,Gisagara,Mamba,G.S KABEZA,1,31,16,47,Yes,Yes,2,2,,0,,,Yes,2026-11-04
 South,Gisagara,Muganza,E.S RWAMIKO,1,16,20,36,Yes,Yes,3,3,,0,,,Yes,2026-10-28
-South,Gisagara,Muganza,G.S CYUMBA,0,0,0,0,Yes,No,4,4,,0,,,Yes,
+South,Gisagara,Muganza,G.S CYUMBA,1,15,20,35,Yes,No,4,4,,0,,,Yes,2026-11-21
 South,Gisagara,Mugombwa,GS MUGOMBWA,1,20,20,40,Yes,Yes,3,3,,0,,,Yes,2026-11-12
 South,Gisagara,Mugombwa,G.S MUSHONGI,1,10,14,24,Yes,Yes,3,3,,0,,,Yes,2026-11-16
 South,Gisagara,Mukindo,E.S MAGI / TSS,1,16,20,36,Yes,Yes,6,6,,0,,,Yes,2026-10-30
