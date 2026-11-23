@@ -59,8 +59,8 @@ East,Rwamagana,Gahengeri,GS GAHENGERI,1,25,36,61,Yes,Yes,3,3,,0,,,Yes,2026-11-10
 East,Rwamagana,Gishali,ES MUHAZI,1,20,20,40,Yes,Yes,8,8,,0,,,Yes,2026-11-13
 East,Rwamagana,Gishali,GS RUHUNDA,1,19,20,39,Yes,No,3,3,,0,,,Yes,2026-11-11
 East,Rwamagana,Gishali,GS GISHARI,1,11,23,34,Yes,No,3,3,,0,,,Yes,2026-11-13
-East,Rwamagana,Karenge,GS KARENGE,0,0,0,0,Yes,No,4,4,,0,,,Yes,
-East,Rwamagana,Karenge,GS NYAMATETE,0,0,0,0,Yes,No,3,3,,0,,,Yes,
+East,Rwamagana,Karenge,GS KARENGE,1,3,2,5,Yes,No,4,4,,0,,,Yes,2026-11-17
+East,Rwamagana,Karenge,GS NYAMATETE,1,9,24,33,Yes,No,3,3,,0,,,Yes,2026-11-17
 East,Rwamagana,Karenge,GS KANGAMBA,0,0,0,0,Yes,Yes,2,2,,0,,,Yes,
 East,Rwamagana,Kigabiro,GS HVP GATAGARA,1,4,4,8,Yes,No,2,2,,0,,,Yes,2026-11-12
 East,Rwamagana,Kigabiro,GS RWAMAGANA PROTESTANT,1,6,5,11,Yes,Yes,5,5,,0,,,Yes,2026-11-12
@@ -769,7 +769,7 @@ South,Huye,Ruhashya,GS RUGOGWE / TSS,1,20,20,40,Yes,Yes,4,4,,0,,,Yes,2026-11-13
 South,Huye,Rusatira,G.S BUHIMBA,1,74,60,134,Yes,Yes,3,2,1,0,,,Yes,2026-11-16
 South,Huye,Rusatira,GS GAFUMBA,1,19,17,36,Yes,Yes,2,2,,0,,,Yes,2026-11-18
 South,Huye,Rusatira,Saint Mary's High School Kiruhura,1,24,13,37,Yes,Yes,11,11,,0,,,Yes,2026-11-17
-South,Huye,Rwaniro,GS KAMWAMBI,0,0,0,0,Yes,Yes,4,4,,0,2026-11-03,,Yes,
+South,Huye,Rwaniro,GS KAMWAMBI,1,20,20,40,Yes,Yes,4,4,,0,2026-11-03,,Yes,2026-11-19
 South,Huye,Simbi,E.S.Saint Jean Bosco Simbi,1,3,1,4,Yes,Yes,4,4,,0,,,Yes,2026-11-19
 South,Huye,Simbi,GS GISAKURA,1,15,20,35,Yes,Yes,2,2,,0,,,Yes,2026-11-18
 South,Huye,Tumba,GS CYARWA,1,3,3,6,Yes,Yes,4,4,,0,,,Yes,2026-11-20
@@ -944,8 +944,8 @@ West,Nyabihu,Kabatwa,G.S KABATWA,1,5,9,14,Yes,Yes,3,1,2,0,,,Yes,2026-11-17
 West,Nyabihu,Karago,ES Kadahenda,1,5,11,16,Yes,Yes,2,2,,0,,,Yes,2026-11-11
 West,Nyabihu,Kintobo,G.S KINTOBO,1,9,20,29,Yes,Yes,3,3,,0,,,Yes,2026-11-04
 West,Nyabihu,Kintobo,ECOLE DES LETTRES DE GATOVU,1,9,21,30,Yes,Yes,2,2,,0,2026-11-03,,Yes,2026-11-03
-West,Nyabihu,Mukamira,COLLEGE ADVENTISTE DE RWANKERI,0,0,0,0,Yes,Yes,9,9,,0,,,Yes,
-West,Nyabihu,Mukamira,GS MUKAMIRA,0,0,0,0,Yes,Yes,3,3,,0,,,Yes,
+West,Nyabihu,Mukamira,COLLEGE ADVENTISTE DE RWANKERI,1,9,7,16,Yes,Yes,9,9,,0,,,Yes,2026-11-20
+West,Nyabihu,Mukamira,GS MUKAMIRA,1,46,99,145,Yes,Yes,3,3,,0,,,Yes,2026-11-19
 West,Nyabihu,Muringa,GS GITEBE,1,12,5,17,Yes,Yes,3,3,,0,,,Yes,2026-11-13
 West,Nyabihu,Muringa,GS MULINGA,1,9,16,25,Yes,Yes,3,1,1,1,,,Yes,2026-11-16
 West,Nyabihu,Rambura,G.S RAMBURA (F),1,20,23,43,Yes,Yes,6,6,,0,,,Yes,2026-11-11
